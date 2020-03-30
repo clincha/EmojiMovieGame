@@ -5,6 +5,16 @@
     <title>Emoji Movie Game</title>
 </head>
 <body>
-<h1>${emoji.character}</h1>
+<h2>
+    <#list clue.emojis as emoji>
+        <#if emoji?has_content>
+            ${emoji}
+            <#else>
+            X
+        </#if>
+    </#list>
+</h2>
+<h1>${clue.film.title}</h1>
+
 </body>
 </html>

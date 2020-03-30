@@ -1,15 +1,19 @@
 package uk.co.emg.service;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import uk.co.emg.entity.Film;
+import uk.co.emg.entity.FilmBuilder;
+
+import java.util.Random;
 
 @Service
 public class FilmService {
-
-  public static final String API_KEY = "https://api.themoviedb.org/3/movie/550?api_key=00fa70c9a0a3d46a9d2d76f0a9c395ea";
+  public static final String BASE_URL = "https://api.themoviedb.org/3/";
+  public static final String API_KEY = "api_key=00fa70c9a0a3d46a9d2d76f0a9c395ea";
   private ApiService apiService;
 
   public FilmService(ApiService apiService) {
@@ -17,17 +21,31 @@ public class FilmService {
   }
 
   public Film getRandomFilm() {
-    return parseTmdbJson();
+    Random random = new Random();
+    Film[] films = getPopularMovies();
+    return films[random.nextInt(films.length)];
   }
 
-  private Film parseTmdbJson() {
-    String rawJSON = apiService.makeApiRequest(API_KEY);
-    JSONParser parser = new JSONParser();
-    JSONObject movieData = null;
+  public Film[] getPopularMovies() {
+    String rawJSON = apiService.makeApiRequest(BASE_URL + "movie/popular?" + API_KEY);
+    return parseTheMovieDatabaseJson(rawJSON);
+  }
 
+  private Film[] parseTheMovieDatabaseJson(String rawJSON) {
+    JSONParser parser = new JSONParser();
     try {
-      movieData = (JSONObject) parser.parse(rawJSON);
-      return new Film((String) movieData.get("title"));
+      JSONObject response = (JSONObject) parser.parse(rawJSON);
+      JSONArray results = (JSONArray) response.get("results");
+      Film[] films = new Film[results.size()];
+      for (int i = 0; i < films.length; i++) {
+        films[i] = new FilmBuilder()
+          .setId((Long) ((JSONObject) results.get(i)).get("id"))
+          .setTitle((String) ((JSONObject) results.get(i)).get("title"))
+          .setOverview((String) ((JSONObject) results.get(i)).get("overview"))
+          .setPosterPath((String) ((JSONObject) results.get(i)).get("poster_path"))
+          .createFilm();
+      }
+      return films;
     } catch (ParseException e) {
       e.printStackTrace();
     }
