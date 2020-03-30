@@ -1,15 +1,5 @@
 package uk.co.emg.entity;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Random;
-import java.util.Scanner;
-
 public class Emoji {
 
   private String slug;
@@ -30,7 +20,7 @@ public class Emoji {
 
   @Override
   public String toString() {
-    return getCharacter();
+    return getSlug() + ":" + getCharacter();
   }
 
   public String getSlug() {

@@ -8,7 +8,7 @@
 <h2>
     <#list clue.emojis as emoji>
         <#if emoji?has_content>
-            ${emoji}
+            ${emoji.character}
             <#else>
             X
         </#if>
