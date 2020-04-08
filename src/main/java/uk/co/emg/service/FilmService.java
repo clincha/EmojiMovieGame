@@ -21,7 +21,7 @@ public class FilmService {
     this.apiService = apiService;
   }
 
-  public Film getRandomFilm() {
+  public Film getRandomFilmExcluding() {
     Random random = new Random();
     Film[] films = getPopularMovies();
     return films[random.nextInt(films.length)];
@@ -55,5 +55,13 @@ public class FilmService {
 
   public Iterable<Film> getFilms(int number) {
     return Arrays.asList(getPopularMovies()).subList(0, number);
+  }
+
+  public Film getRandomFilmExcluding(Film film) {
+    Film chosen = film;
+    while (film == chosen) {
+      chosen = getRandomFilmExcluding();
+    }
+    return chosen;
   }
 }

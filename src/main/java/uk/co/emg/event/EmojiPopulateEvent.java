@@ -2,7 +2,7 @@ package uk.co.emg.event;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class EmojiPopulateEvent {
     this.applicationEventPublisher = applicationEventPublisher;
   }
 
-  @EventListener(ApplicationReadyEvent.class)
+  @EventListener(ApplicationStartedEvent.class)
   public void getEmojiData() {
     if (!emojiDataPopulated()) {
       logger.info("No emoji data, populating");

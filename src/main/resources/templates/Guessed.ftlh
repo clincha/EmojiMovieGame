@@ -12,37 +12,29 @@
     <title>Movie Emoji Quiz</title>
 </head>
 <body>
-<form method="post" action="/guess">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col">
-                <h1>
-                    <#list clue.clueComponents as clueComponent>
-                        <#if clueComponent.emoji?has_content>
-                            ${clueComponent.emoji.character}
-                        <#else>
-                            X
-                        </#if>
-                    </#list>
-                </h1>
-            </div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col">
+            <#if correct>
+                <h1>Correct!</h1>
+            <#else >
+                <h1>Wrong!</h1>
+            </#if>
         </div>
-        <div class="row">
-            <div class="col-lg-4"></div>
-            <div class="col">
-                <input name="option" type="submit" class="movie-option-button btn btn-primary" value="${options[0].title}">
-            </div>
-            <div class="col">
-                <input name="option" type="submit" class="movie-option-button btn btn-primary" value="${options[1].title}">
-            </div>
-            <div class="col">
-                <input name="option" type="submit" class="movie-option-button btn btn-primary" value="${options[2].title}">
-            </div>
-            <div class="col-lg-4"></div>
-        </div>
+        <div class="col-md-4"></div>
     </div>
-    <input name="clueId" type="hidden" value="${clue.id}">
-</form>
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col">
+            <form action="/clue">
+                <input type="submit" value="Another one!">
+            </form>
+        </div>
+        <div class="col-lg-4"></div>
+    </div>
+</div>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

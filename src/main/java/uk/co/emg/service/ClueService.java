@@ -9,7 +9,9 @@ import uk.co.emg.repository.ClueComponentRepository;
 import uk.co.emg.repository.ClueRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClueService {
@@ -41,6 +43,20 @@ public class ClueService {
   }
 
   public Clue getClue() {
-    return clueRepository.findById(1L).orElseGet(() -> createClue(filmService.getRandomFilm()));
+    return clueRepository.findById(1L).orElseGet(() -> createClue(filmService.getRandomFilmExcluding()));
+  }
+
+  public List<Film> getOptions(Clue clue) {
+    List<Film> options = new ArrayList<>(List.of(clue.getFilm(), filmService.getRandomFilmExcluding(clue.getFilm()), filmService.getRandomFilmExcluding(clue.getFilm())));
+    Collections.shuffle(options);
+    return options;
+  }
+
+  public Optional<Clue> getClue(Long clueId) {
+    return clueRepository.findById(clueId);
+  }
+
+  public Boolean guess(Clue clue, String option) {
+    return clue.getFilm().getTitle().equals(option);
   }
 }

@@ -30,11 +30,12 @@ public class BigBangEvent {
     if (!filmDataIsLoaded()) {
       logger.info("No film data, populating");
       loadFilmData();
-      logger.info("Populated fim data");
     }
+    logger.info("Creating clues");
     for (Film film : filmRepository.findAll()) {
       clueService.createClue(film);
     }
+    logger.info("Populated fim and clue data");
   }
 
   private boolean filmDataIsLoaded() {
