@@ -7,61 +7,62 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import uk.co.emg.builder.FilmBuilder;
 import uk.co.emg.entity.Film;
+import uk.co.emg.repository.FilmRepository;
 
-import java.util.Arrays;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class FilmService {
   public static final String BASE_URL = "https://api.themoviedb.org/3/";
   public static final String API_KEY = "api_key=00fa70c9a0a3d46a9d2d76f0a9c395ea";
+  public static final int FILM_GENERATION_SIZE = 3;
+
   private ApiService apiService;
+  private FilmRepository filmRepository;
 
-  public FilmService(ApiService apiService) {
+  public FilmService(ApiService apiService, FilmRepository filmRepository) {
     this.apiService = apiService;
+    this.filmRepository = filmRepository;
   }
 
-  public Film getRandomFilmExcluding() {
-    Random random = new Random();
-    Film[] films = getPopularMovies();
-    return films[random.nextInt(films.length)];
-  }
-
-  public Film[] getPopularMovies() {
-    String rawJSON = apiService.makeApiRequest(BASE_URL + "movie/popular?" + API_KEY);
-    return parseTheMovieDatabaseJson(rawJSON);
-  }
-
-  private Film[] parseTheMovieDatabaseJson(String rawJSON) {
-    JSONParser parser = new JSONParser();
-    try {
+  public void preLoad() throws ParseException {
+    if (filmRepository.count() == 0) {
+      String rawJSON = apiService.makeApiRequest("https://api.themoviedb.org/3/discover/movie/?api_key=00fa70c9a0a3d46a9d2d76f0a9c395ea&language=en-UK&sort_by=popularity.desc");
+      JSONParser parser = new JSONParser();
       JSONObject response = (JSONObject) parser.parse(rawJSON);
       JSONArray results = (JSONArray) response.get("results");
-      Film[] films = new Film[results.size()];
-      for (int i = 0; i < films.length; i++) {
-        films[i] = new FilmBuilder()
-          .setId((Long) ((JSONObject) results.get(i)).get("id"))
-          .setTitle((String) ((JSONObject) results.get(i)).get("title"))
-          .setOverview((String) ((JSONObject) results.get(i)).get("overview"))
-          .setPosterPath((String) ((JSONObject) results.get(i)).get("poster_path"))
-          .createFilm();
+
+      ArrayList<Film> films = new ArrayList<>(results.size());
+
+      for (int i = 0; i < FILM_GENERATION_SIZE; i++) {
+        JSONObject result = (JSONObject) results.get(i);
+        films.add(new FilmBuilder()
+          .setId((Long) (result).get("id"))
+          .setTitle((String) result.get("title"))
+          .setOverview((String) result.get("overview"))
+          .setPosterPath((String) result.get("poster_path"))
+          .createFilm());
       }
-      return films;
-    } catch (ParseException e) {
-      e.printStackTrace();
+      filmRepository.saveAll(films);
     }
-    return null;
   }
 
-  public Iterable<Film> getFilms(int number) {
-    return Arrays.asList(getPopularMovies()).subList(0, number);
+  public ArrayList<Film> getPopularFilms() {
+    ArrayList<Film> popularFilms = new ArrayList<>();
+    filmRepository.findAll().forEach(popularFilms::add);
+    return popularFilms;
   }
 
-  public Film getRandomFilmExcluding(Film film) {
-    Film chosen = film;
-    while (film == chosen) {
-      chosen = getRandomFilmExcluding();
-    }
-    return chosen;
+  public ArrayList<Film> getAllFilms() {
+    ArrayList<Film> films = new ArrayList<>();
+    filmRepository.findAll().forEach(films::add);
+    return films;
+  }
+
+  public List<Film> getRandomFilmsExcludingFilm(Film film) {
+    ArrayList<Film> films = getPopularFilms();
+    films.remove(film);
+    return films;
   }
 }

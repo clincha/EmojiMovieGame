@@ -2,38 +2,48 @@ package uk.co.emg.service;
 
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Scanner;
 
 @Service
 public class ApiService {
 
   String makeApiRequest(String requestUrl) {
-    int responseCode = -1;
-    StringBuilder response = new StringBuilder();
+    try {
+      URL obj = new URL(requestUrl);
+      HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
+      conn.setReadTimeout(5000);
 
-    while (responseCode != 200) {
-      try {
-        URL url = new URL(requestUrl);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.connect();
-
-        responseCode = connection.getResponseCode();
-
-        Scanner scanner = new Scanner(url.openStream());
-        while (scanner.hasNext()) {
-          response.append(scanner.nextLine());
-        }
-
-        if (responseCode != 200) {
-          throw new Exception("Bad API Response: " + response);
-        }
-      } catch (Exception e) {
-        e.printStackTrace();
+      boolean redirect = false;
+      int status = conn.getResponseCode();
+      if (status != HttpURLConnection.HTTP_OK) {
+        if (status == HttpURLConnection.HTTP_MOVED_TEMP
+          || status == HttpURLConnection.HTTP_MOVED_PERM
+          || status == HttpURLConnection.HTTP_SEE_OTHER)
+          redirect = true;
       }
+
+      if (redirect) {
+        String newUrl = conn.getHeaderField("Location");
+        conn = (HttpURLConnection) new URL(newUrl).openConnection();
+      }
+
+      BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+      String inputLine;
+      StringBuilder html = new StringBuilder();
+
+      while ((inputLine = in.readLine()) != null) {
+        html.append(inputLine);
+      }
+      in.close();
+
+      return html.toString();
+
+    } catch (Exception e) {
+      e.printStackTrace();
     }
-    return response.toString();
+    return null;
   }
 }

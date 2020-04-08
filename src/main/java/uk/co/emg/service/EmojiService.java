@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service;
 import uk.co.emg.builder.EmojiBuilder;
 import uk.co.emg.entity.Emoji;
 import uk.co.emg.entity.Film;
+import uk.co.emg.repository.EmojiRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EmojiService {
@@ -19,48 +20,49 @@ public class EmojiService {
   public static final String ACCESS_KEY = "access_key=d41710af6f06cd316334a2a8e337b984bddbb23f";
   private static final String EMOJI_API_URL = "https://emoji-api.com";
   private ApiService apiService;
+  private EmojiRepository emojiRepository;
 
-  public EmojiService(ApiService apiService) {
+  public EmojiService(ApiService apiService, EmojiRepository emojiRepository) {
     this.apiService = apiService;
+    this.emojiRepository = emojiRepository;
+  }
+
+  /**
+   * Check to see if there is emoji data in the database.
+   * Get data from API if there isn't any data
+   *
+   * @throws Exception preload failed
+   */
+  public void preLoad() throws Exception {
+    if (emojiRepository.count() == 0) {
+      String rawJSON = apiService.makeApiRequest(EMOJI_API_URL + "/emojis?" + ACCESS_KEY);
+      List<Emoji> emojis = parseOpenEmojiResponse(rawJSON);
+      emojiRepository.saveAll(emojis);
+    }
   }
 
   public List<Emoji> getEmojiBasedOnFilm(Film film) {
     ArrayList<Emoji> emojis = new ArrayList<>();
     for (String filmTitleWord : film.getTitle().split(" ")) {
-      emojis.add(search(filmTitleWord).orElse(null));
+      ArrayList<Emoji> searchResults = emojiRepository.findEmojiBySlugContains(filmTitleWord);
+      if (searchResults.isEmpty()) {
+        emojiRepository.findAll().forEach(searchResults::add);
+      }
+      Collections.shuffle(searchResults);
+      emojis.add(searchResults.get(0));
     }
     return emojis;
   }
 
-  private Optional<Emoji> search(String word) {
-    String rawJSON = apiService.makeApiRequest(EMOJI_API_URL + "/emojis?search=" + word + "&" + ACCESS_KEY);
-    try {
-      Emoji[] emojis = parseOpenEmojiResponse(rawJSON);
-      return Optional.of(emojis[0]);
-    } catch (Exception e) {
-      return Optional.empty();
-    }
-  }
-
-  public Emoji[] getAllEmojis() {
-    String rawJSON = apiService.makeApiRequest(EMOJI_API_URL + "/emojis?" + ACCESS_KEY);
-    return parseOpenEmojiResponse(rawJSON);
-  }
-
-  public Emoji[] parseOpenEmojiResponse(String rawJSON) {
+  private List<Emoji> parseOpenEmojiResponse(String rawJSON) throws ParseException {
     JSONParser parser = new JSONParser();
-    JSONArray allEmojiData = null;
 
-    try {
-      allEmojiData = (JSONArray) parser.parse(rawJSON);
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
+    JSONArray allEmojiData = (JSONArray) parser.parse(rawJSON);
 
-    Emoji[] emojis = new Emoji[allEmojiData == null ? 0 : allEmojiData.size()];
+    ArrayList<Emoji> emojis = new ArrayList<>(allEmojiData.size());
 
-    for (int i = 0; i < emojis.length; i++) {
-      JSONObject emojiJSON = (JSONObject) allEmojiData.get(i);
+    for (Object emojiJSONObject : allEmojiData) {
+      JSONObject emojiJSON = (JSONObject) emojiJSONObject;
       Emoji emoji = new EmojiBuilder()
         .setSlug(emojiJSON.get("slug").toString())
         .setCharacter(emojiJSON.get("character").toString())
@@ -69,7 +71,7 @@ public class EmojiService {
         .setGroup(emojiJSON.get("group").toString())
         .setSubGroup(emojiJSON.get("subGroup").toString())
         .build();
-      emojis[i] = emoji;
+      emojis.add(emoji);
     }
     return emojis;
   }

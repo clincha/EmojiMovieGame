@@ -15,9 +15,10 @@ import java.util.Optional;
 
 @Service
 public class ClueService {
+  public final int CLUE_GENERATION_SIZE = 10;
   private EmojiService emojiService;
-  private ClueRepository clueRepository;
   private FilmService filmService;
+  private ClueRepository clueRepository;
   private ClueComponentRepository clueComponentRepository;
 
   public ClueService(EmojiService emojiService, ClueRepository clueRepository, FilmService filmService, ClueComponentRepository clueComponentRepository) {
@@ -25,6 +26,16 @@ public class ClueService {
     this.clueRepository = clueRepository;
     this.filmService = filmService;
     this.clueComponentRepository = clueComponentRepository;
+  }
+
+  public void preLoad() {
+    if (clueRepository.count() == 0) {
+      for (Film film : filmService.getPopularFilms()) {
+        for (int i = 0; i < CLUE_GENERATION_SIZE; i++) {
+          clueRepository.save(createClue(film));
+        }
+      }
+    }
   }
 
   public Clue createClue(Film film) {
@@ -43,13 +54,22 @@ public class ClueService {
   }
 
   public Clue getClue() {
-    return clueRepository.findById(1L).orElseGet(() -> createClue(filmService.getRandomFilmExcluding()));
+    List<Clue> clues = getAllClues();
+    Collections.shuffle(clues);
+    return clues.get(0);
+  }
+
+  private List<Clue> getAllClues() {
+    ArrayList<Clue> clues = new ArrayList<>();
+    clueRepository.findAll().forEach(clues::add);
+    return clues;
   }
 
   public List<Film> getOptions(Clue clue) {
-    List<Film> options = new ArrayList<>(List.of(clue.getFilm(), filmService.getRandomFilmExcluding(clue.getFilm()), filmService.getRandomFilmExcluding(clue.getFilm())));
-    Collections.shuffle(options);
-    return options;
+    List<Film> films = filmService.getRandomFilmsExcludingFilm(clue.getFilm());
+    films.add(clue.getFilm());
+    Collections.shuffle(films);
+    return films;
   }
 
   public Optional<Clue> getClue(Long clueId) {
@@ -59,4 +79,5 @@ public class ClueService {
   public Boolean guess(Clue clue, String option) {
     return clue.getFilm().getTitle().equals(option);
   }
+
 }

@@ -1,10 +1,10 @@
 package uk.co.emg.entity;
 
-import org.hibernate.validator.constraints.Length;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.List;
 
 @Entity
 public class Film {
@@ -19,6 +19,9 @@ public class Film {
   @Column(length = 100000)
   String overview;
 
+  @OneToMany
+  List<Clue> clues;
+
   public Film() {
   }
 
@@ -29,20 +32,20 @@ public class Film {
     this.overview = overview;
   }
 
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
   public String getTitle() {
     return title;
   }
 
   public void setTitle(String title) {
     this.title = title;
-  }
-
-  public long getId() {
-    return id;
-  }
-
-  public void setId(long id) {
-    this.id = id;
   }
 
   public String getPosterPath() {
@@ -61,10 +64,36 @@ public class Film {
     this.overview = overview;
   }
 
+  public List<Clue> getClues() {
+    return clues;
+  }
+
+  public void setClues(List<Clue> clues) {
+    this.clues = clues;
+  }
+
   @Override
   public String toString() {
     return "Film{" +
       "title='" + title + '\'' +
       '}';
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Film film = (Film) o;
+
+    if (!id.equals(film.id)) return false;
+    return title.equals(film.title);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = id.hashCode();
+    result = 31 * result + title.hashCode();
+    return result;
   }
 }
