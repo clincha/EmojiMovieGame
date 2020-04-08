@@ -5,9 +5,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
+import uk.co.emg.builder.FilmBuilder;
 import uk.co.emg.entity.Film;
-import uk.co.emg.entity.FilmBuilder;
 
+import java.util.Arrays;
 import java.util.Random;
 
 @Service
@@ -52,4 +53,7 @@ public class FilmService {
     return null;
   }
 
+  public Iterable<Film> getFilms(int number) {
+    return Arrays.asList(getPopularMovies()).subList(0, number);
+  }
 }

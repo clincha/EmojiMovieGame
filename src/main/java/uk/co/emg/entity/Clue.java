@@ -1,20 +1,41 @@
 package uk.co.emg.entity;
 
-import java.util.Arrays;
-import java.util.HashMap;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
 public class Clue {
 
-  private Film film;
-  private int correctGuesses;
-  private HashMap<Film, Integer> incorrectGuesses;
-  private Emoji[] emojis;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
 
-  public Clue(Film film, Emoji[] emojis) {
+  @ManyToOne
+  private Film film;
+
+  @OneToMany(mappedBy = "clue")
+  private List<ClueComponent> clueComponents;
+
+  public Clue() {
+  }
+
+  public Clue(Film film) {
     this.film = film;
-    this.emojis = emojis;
-    correctGuesses = 0;
-    incorrectGuesses = new HashMap<>();
+
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public Film getFilm() {
@@ -25,32 +46,11 @@ public class Clue {
     this.film = film;
   }
 
-  public int getCorrectGuesses() {
-    return correctGuesses;
+  public List<ClueComponent> getClueComponents() {
+    return clueComponents;
   }
 
-  public void setCorrectGuesses(int correctGuesses) {
-    this.correctGuesses = correctGuesses;
-  }
-
-  public HashMap<Film, Integer> getIncorrectGuesses() {
-    return incorrectGuesses;
-  }
-
-  public void setIncorrectGuesses(HashMap<Film, Integer> incorrectGuesses) {
-    this.incorrectGuesses = incorrectGuesses;
-  }
-
-  public Emoji[] getEmojis() {
-    return emojis;
-  }
-
-  public void setEmojis(Emoji[] emojis) {
-    this.emojis = emojis;
-  }
-
-  @Override
-  public String toString() {
-    return Arrays.toString(emojis);
+  public void setClueComponents(List<ClueComponent> clueComponents) {
+    this.clueComponents = clueComponents;
   }
 }

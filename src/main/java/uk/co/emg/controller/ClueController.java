@@ -35,7 +35,7 @@ public class ClueController {
   @GetMapping("/clue")
   public ModelAndView clue() {
     return new ModelAndView("Clue")
-      .addObject("clue", clueService.getRandomClue());
+      .addObject("clue", clueService.getClue());
   }
 
 }

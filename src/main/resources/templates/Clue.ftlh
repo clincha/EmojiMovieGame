@@ -6,9 +6,9 @@
 </head>
 <body>
 <h2>
-    <#list clue.emojis as emoji>
-        <#if emoji?has_content>
-            ${emoji.character}
+    <#list clue.clueComponents as clueComponent>
+        <#if clueComponent.emoji?has_content>
+            ${clueComponent.emoji.character}
             <#else>
             X
         </#if>

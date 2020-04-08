@@ -1,4 +1,6 @@
-package uk.co.emg.entity;
+package uk.co.emg.builder;
+
+import uk.co.emg.entity.Film;
 
 public class FilmBuilder {
   private long id;

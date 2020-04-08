@@ -1,11 +1,26 @@
 package uk.co.emg.entity;
 
+import org.hibernate.validator.constraints.Length;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Film {
 
-  long id;
+  @Id
+  Long id;
+
   String title;
+
   String posterPath;
+
+  @Column(length = 100000)
   String overview;
+
+  public Film() {
+  }
 
   public Film(long id, String title, String posterPath, String overview) {
     this.id = id;

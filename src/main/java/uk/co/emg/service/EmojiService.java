@@ -5,11 +5,13 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
+import uk.co.emg.builder.EmojiBuilder;
 import uk.co.emg.entity.Emoji;
-import uk.co.emg.entity.EmojiBuilder;
 import uk.co.emg.entity.Film;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -24,11 +26,10 @@ public class EmojiService {
     this.apiService = apiService;
   }
 
-  public Emoji[] getEmojiBasedOnFilm(Film film) {
-    String[] filmTitleWords = film.getTitle().split(" ");
-    Emoji[] emojis = new Emoji[filmTitleWords.length];
-    for (int i = 0; i < filmTitleWords.length; i++) {
-      emojis[i] = search(filmTitleWords[i]).orElse(null);
+  public List<Emoji> getEmojiBasedOnFilm(Film film) {
+    ArrayList<Emoji> emojis = new ArrayList<>();
+    for (String filmTitleWord : film.getTitle().split(" ")) {
+      emojis.add(search(filmTitleWord).orElse(null));
     }
     return emojis;
   }
@@ -39,7 +40,7 @@ public class EmojiService {
       Emoji[] emojis = parseOpenEmojiResponse(rawJSON);
       System.out.println(word + ": " + Arrays.toString(emojis));
       return Optional.of(emojis[0]);
-    } catch (Exception e){
+    } catch (Exception e) {
       return Optional.empty();
     }
   }
@@ -50,7 +51,7 @@ public class EmojiService {
     return emojis[random.nextInt(emojis.length)];
   }
 
-  private Emoji[] getAllEmojis() {
+  public Emoji[] getAllEmojis() {
     String rawJSON = apiService.makeApiRequest(EMOJI_API_URL + "/emojis?" + ACCESS_KEY);
     return parseOpenEmojiResponse(rawJSON);
   }

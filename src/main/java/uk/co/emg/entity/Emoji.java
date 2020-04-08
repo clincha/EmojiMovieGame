@@ -1,20 +1,33 @@
 package uk.co.emg.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Emoji {
 
+  @Id
   private String slug;
+
   private String character;
+
   private String unicodeName;
+
   private String codePoint;
-  private String group;
+
+  private String emojiGroup;
+
   private String subGroup;
 
-  public Emoji(String slug, String character, String unicodeName, String codePoint, String group, String subGroup) {
+  public Emoji() {
+  }
+
+  public Emoji(String slug, String character, String unicodeName, String codePoint, String emojiGroup, String subGroup) {
     this.slug = slug;
     this.character = character;
     this.unicodeName = unicodeName;
     this.codePoint = codePoint;
-    this.group = group;
+    this.emojiGroup = emojiGroup;
     this.subGroup = subGroup;
   }
 
@@ -55,12 +68,12 @@ public class Emoji {
     this.codePoint = codePoint;
   }
 
-  public String getGroup() {
-    return group;
+  public String getEmojiGroup() {
+    return emojiGroup;
   }
 
-  public void setGroup(String group) {
-    this.group = group;
+  public void setEmojiGroup(String group) {
+    this.emojiGroup = group;
   }
 
   public String getSubGroup() {
