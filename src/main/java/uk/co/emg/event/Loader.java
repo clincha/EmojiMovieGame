@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import uk.co.emg.repository.ClueRepository;
-import uk.co.emg.repository.FilmRepository;
 import uk.co.emg.service.ClueService;
 import uk.co.emg.service.EmojiService;
 import uk.co.emg.service.FilmService;
@@ -14,7 +12,6 @@ import uk.co.emg.service.FilmService;
 @Component
 public class Loader {
 
-  public static final int INITIAL_POPULATION = 3;
   private static final Logger logger = LoggerFactory.getLogger(Loader.class);
   private FilmService filmService;
   private ClueService clueService;

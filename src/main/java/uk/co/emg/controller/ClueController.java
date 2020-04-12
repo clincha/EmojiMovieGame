@@ -31,7 +31,8 @@ public class ClueController {
 
   @PostMapping("/guess")
   public ModelAndView guess(@RequestParam("option") String option, @RequestParam("clueId") Long clueId) {
-    Clue clue = clueService.getClue(clueId).orElseThrow();
+    Clue clue = clueService.getClue(clueId)
+      .orElseThrow();
     return new ModelAndView("Guessed")
       .addObject("clue", clue)
       .addObject("correct", clueService.guess(clue, option));

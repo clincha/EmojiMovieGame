@@ -50,13 +50,15 @@ public class FilmService {
 
   public ArrayList<Film> getPopularFilms() {
     ArrayList<Film> popularFilms = new ArrayList<>();
-    filmRepository.findAll().forEach(popularFilms::add);
+    filmRepository.findAll()
+      .forEach(popularFilms::add);
     return popularFilms;
   }
 
   public ArrayList<Film> getAllFilms() {
     ArrayList<Film> films = new ArrayList<>();
-    filmRepository.findAll().forEach(films::add);
+    filmRepository.findAll()
+      .forEach(films::add);
     return films;
   }
 

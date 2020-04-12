@@ -61,7 +61,8 @@ public class ClueService {
 
   private List<Clue> getAllClues() {
     ArrayList<Clue> clues = new ArrayList<>();
-    clueRepository.findAll().forEach(clues::add);
+    clueRepository.findAll()
+      .forEach(clues::add);
     return clues;
   }
 
@@ -77,7 +78,9 @@ public class ClueService {
   }
 
   public Boolean guess(Clue clue, String option) {
-    return clue.getFilm().getTitle().equals(option);
+    return clue.getFilm()
+      .getTitle()
+      .equals(option);
   }
 
 }

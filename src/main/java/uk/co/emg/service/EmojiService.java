@@ -43,10 +43,12 @@ public class EmojiService {
 
   public List<Emoji> getEmojiBasedOnFilm(Film film) {
     ArrayList<Emoji> emojis = new ArrayList<>();
-    for (String filmTitleWord : film.getTitle().split(" ")) {
+    for (String filmTitleWord : film.getTitle()
+      .split(" ")) {
       ArrayList<Emoji> searchResults = emojiRepository.findEmojiBySlugContains(filmTitleWord);
       if (searchResults.isEmpty()) {
-        emojiRepository.findAll().forEach(searchResults::add);
+        emojiRepository.findAll()
+          .forEach(searchResults::add);
       }
       Collections.shuffle(searchResults);
       emojis.add(searchResults.get(0));
@@ -64,12 +66,18 @@ public class EmojiService {
     for (Object emojiJSONObject : allEmojiData) {
       JSONObject emojiJSON = (JSONObject) emojiJSONObject;
       Emoji emoji = new EmojiBuilder()
-        .setSlug(emojiJSON.get("slug").toString())
-        .setCharacter(emojiJSON.get("character").toString())
-        .setUnicodeName(emojiJSON.get("unicodeName").toString())
-        .setCodePoint(emojiJSON.get("codePoint").toString())
-        .setGroup(emojiJSON.get("group").toString())
-        .setSubGroup(emojiJSON.get("subGroup").toString())
+        .setSlug(emojiJSON.get("slug")
+          .toString())
+        .setCharacter(emojiJSON.get("character")
+          .toString())
+        .setUnicodeName(emojiJSON.get("unicodeName")
+          .toString())
+        .setCodePoint(emojiJSON.get("codePoint")
+          .toString())
+        .setGroup(emojiJSON.get("group")
+          .toString())
+        .setSubGroup(emojiJSON.get("subGroup")
+          .toString())
         .build();
       emojis.add(emoji);
     }
