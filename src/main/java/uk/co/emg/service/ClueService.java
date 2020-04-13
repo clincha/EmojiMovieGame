@@ -5,6 +5,7 @@ import uk.co.emg.entity.Clue;
 import uk.co.emg.entity.ClueComponent;
 import uk.co.emg.entity.Emoji;
 import uk.co.emg.entity.Film;
+import uk.co.emg.entity.Guess;
 import uk.co.emg.repository.ClueComponentRepository;
 import uk.co.emg.repository.ClueRepository;
 
@@ -77,10 +78,10 @@ public class ClueService {
     return clueRepository.findById(clueId);
   }
 
-  public Boolean guess(Clue clue, String option) {
+  public Boolean guess(Clue clue, Long filmId) {
     return clue.getFilm()
-      .getTitle()
-      .equals(option);
+      .getId()
+      .equals(filmId);
   }
 
 }

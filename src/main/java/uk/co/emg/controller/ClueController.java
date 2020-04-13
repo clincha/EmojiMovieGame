@@ -7,17 +7,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import uk.co.emg.entity.Clue;
 import uk.co.emg.entity.Film;
+import uk.co.emg.exception.IncorrectClueIdException;
+import uk.co.emg.exception.IncorrectFilmIdException;
 import uk.co.emg.service.ClueService;
+import uk.co.emg.service.FilmService;
+import uk.co.emg.service.GuessService;
 
 import java.util.List;
 
 @Controller
 public class ClueController {
 
-  private ClueService clueService;
+  private final ClueService clueService;
+  private final FilmService filmService;
+  private final GuessService guessService;
 
-  public ClueController(ClueService clueService) {
+  public ClueController(ClueService clueService, FilmService filmService, GuessService guessService) {
     this.clueService = clueService;
+    this.filmService = filmService;
+    this.guessService = guessService;
   }
 
   @GetMapping("/clue")
@@ -30,12 +38,14 @@ public class ClueController {
   }
 
   @PostMapping("/guess")
-  public ModelAndView guess(@RequestParam("option") String option, @RequestParam("clueId") Long clueId) {
+  public ModelAndView guess(@RequestParam("option") Long filmId, @RequestParam("clueId") Long clueId) throws IncorrectClueIdException, IncorrectFilmIdException {
     Clue clue = clueService.getClue(clueId)
-      .orElseThrow();
+      .orElseThrow(IncorrectClueIdException::new);
+    Film film = filmService.getFilm(filmId)
+      .orElseThrow(IncorrectFilmIdException::new);
     return new ModelAndView("Guessed")
       .addObject("clue", clue)
-      .addObject("correct", clueService.guess(clue, option));
+      .addObject("correct", guessService.guess(clue, film));
   }
 
 }

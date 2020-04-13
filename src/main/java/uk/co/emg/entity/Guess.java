@@ -17,9 +17,14 @@ public class Guess {
   private Clue clue;
 
   @ManyToOne
-  private Film userGuess;
+  private Film film;
 
   public Guess() {
+  }
+
+  public Guess(Clue clue, Film film) {
+    this.clue = clue;
+    this.film = film;
   }
 
   public Long getId() {
@@ -38,11 +43,16 @@ public class Guess {
     this.clue = clue;
   }
 
-  public Film getUserGuess() {
-    return userGuess;
+  public Film getFilm() {
+    return film;
   }
 
-  public void setUserGuess(Film userGuess) {
-    this.userGuess = userGuess;
+  public void setFilm(Film userGuess) {
+    this.film = userGuess;
+  }
+
+  public boolean isCorrect() {
+    return clue.getFilm()
+      .equals(film);
   }
 }
