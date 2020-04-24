@@ -48,8 +48,9 @@ public class ClueController {
       .orElseThrow(IncorrectClueIdException::new);
     Film film = filmService.getFilm(filmId)
       .orElseThrow(IncorrectFilmIdException::new);
+    Boolean isCorrect = guessService.guess(clue, film);
     return new ModelAndView("Guessed")
-      .addObject("correct", guessService.guess(clue, film));
+      .addObject("correct", isCorrect);
   }
 
 }
