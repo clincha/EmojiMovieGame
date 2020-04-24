@@ -6,10 +6,12 @@ import uk.co.emg.entity.ClueComponent;
 import uk.co.emg.entity.Emoji;
 import uk.co.emg.entity.Film;
 import uk.co.emg.entity.Guess;
+import uk.co.emg.exception.NoCluesException;
 import uk.co.emg.repository.ClueRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,12 +23,14 @@ public class ClueService {
   private final FilmService filmService;
   private final ClueComponentService clueComponentService;
   private final ClueRepository clueRepository;
+  private final GuessService guessService;
 
-  public ClueService(EmojiService emojiService, FilmService filmService, ClueComponentService clueComponentService, ClueRepository clueRepository) {
+  public ClueService(EmojiService emojiService, FilmService filmService, ClueComponentService clueComponentService, GuessService guessService, ClueRepository clueRepository) {
     this.emojiService = emojiService;
     this.clueRepository = clueRepository;
     this.filmService = filmService;
     this.clueComponentService = clueComponentService;
+    this.guessService = guessService;
   }
 
   public void preLoad() {
@@ -54,13 +58,14 @@ public class ClueService {
     return clue;
   }
 
-  public Clue getClue() {
-    List<Clue> clues = getAllClues();
-    Collections.shuffle(clues);
-    return clues.get(0);
+  public Clue getClue() throws NoCluesException {
+    return getAllClues().stream()
+      .min(Comparator.comparing(clue -> guessService.getGuesses(clue)
+        .size()))
+      .orElseThrow(NoCluesException::new);
   }
 
-  private List<Clue> getAllClues() {
+  List<Clue> getAllClues() {
     ArrayList<Clue> clues = new ArrayList<>();
     clueRepository.findAll()
       .forEach(clues::add);
@@ -78,8 +83,8 @@ public class ClueService {
     return clueRepository.findById(clueId);
   }
 
-  public double calculateFitness(Clue clue, List<Guess> guesses) {
-    Double fitness = guesses
+  public double calculateFitness(Clue clue) {
+    Double fitness = guessService.getGuesses(clue)
       .stream()
       .map(Guess::isCorrect)
       .collect(Collectors.averagingDouble(value -> value ? 1 : 0));

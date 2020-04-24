@@ -28,7 +28,6 @@ public class Clue {
 
   public Clue(Film film) {
     this.film = film;
-
   }
 
   public Long getId() {
@@ -61,5 +60,20 @@ public class Clue {
 
   public void setFitness(Double fitness) {
     this.fitness = fitness;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Clue clue = (Clue) o;
+
+    return id.equals(clue.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return id.hashCode();
   }
 }

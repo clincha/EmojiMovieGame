@@ -9,6 +9,7 @@ import uk.co.emg.entity.Clue;
 import uk.co.emg.entity.Film;
 import uk.co.emg.exception.IncorrectClueIdException;
 import uk.co.emg.exception.IncorrectFilmIdException;
+import uk.co.emg.exception.NoCluesException;
 import uk.co.emg.service.ClueService;
 import uk.co.emg.service.FilmService;
 import uk.co.emg.service.GuessService;
@@ -29,12 +30,12 @@ public class ClueController {
   }
 
   @GetMapping("/")
-  public ModelAndView index() {
+  public ModelAndView index() throws NoCluesException {
     return clue();
   }
 
   @GetMapping("/clue")
-  public ModelAndView clue() {
+  public ModelAndView clue() throws NoCluesException {
     Clue clue = clueService.getClue();
     List<Film> options = clueService.getOptions(clue);
     return new ModelAndView("Clue")
