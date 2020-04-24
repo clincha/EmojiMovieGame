@@ -21,6 +21,8 @@ public class Clue {
   @OneToMany(mappedBy = "clue")
   private List<ClueComponent> clueComponents;
 
+  private Double fitness;
+
   public Clue() {
   }
 
@@ -51,5 +53,13 @@ public class Clue {
 
   public void setClueComponents(List<ClueComponent> clueComponents) {
     this.clueComponents = clueComponents;
+  }
+
+  public Double getFitness() {
+    return fitness;
+  }
+
+  public void setFitness(Double fitness) {
+    this.fitness = fitness;
   }
 }

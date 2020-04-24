@@ -52,7 +52,7 @@ public class FitnessTests {
     Guess correctGuess = new Guess(clue, correctFilm);
     Guess wrongGuess = new Guess(clue, wrongFilm);
 
-    assertEquals(0.5, clueService.calculateFitness(List.of(correctGuess, wrongGuess)), 0);
+    assertEquals(0.5, clueService.calculateFitness(clue, List.of(correctGuess, wrongGuess)), 0);
   }
 
 }

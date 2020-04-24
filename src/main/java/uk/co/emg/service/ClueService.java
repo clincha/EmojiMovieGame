@@ -78,10 +78,13 @@ public class ClueService {
     return clueRepository.findById(clueId);
   }
 
-  public double calculateFitness(List<Guess> guesses) {
-    return guesses
+  public double calculateFitness(Clue clue, List<Guess> guesses) {
+    Double fitness = guesses
       .stream()
       .map(Guess::isCorrect)
       .collect(Collectors.averagingDouble(value -> value ? 1 : 0));
+    clue.setFitness(fitness);
+    clueRepository.save(clue);
+    return fitness;
   }
 }

@@ -19,7 +19,7 @@ public class GuessService {
   public boolean guess(Clue clue, Film film) {
     Guess guess = new Guess(clue, film);
     guessRepository.save(guess);
-    clueService.calculateFitness(guessRepository.findAllByClue(clue));
+    clueService.calculateFitness(clue, guessRepository.findAllByClue(clue));
     return guess.isCorrect();
   }
 }
