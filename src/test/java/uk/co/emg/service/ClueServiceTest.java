@@ -44,14 +44,17 @@ public class ClueServiceTest {
 
     Clue clue = new Clue(film);
     Clue clue1 = new Clue(film);
+    Clue clue2 = new Clue(film);
 
-    clue.setId(1L);
-    clue1.setId(2L);
+    clue.setId(0L);
+    clue1.setId(1L);
+    clue2.setId(2L);
 
-    when(clueRepository.findAll()).thenReturn(List.of(clue, clue1));
+    when(clueRepository.findAll()).thenReturn(List.of(clue, clue1, clue2));
 
     when(guessService.getGuesses(clue)).thenReturn(List.of(new Guess(clue, film), new Guess(clue, film)));
     when(guessService.getGuesses(clue1)).thenReturn(List.of(new Guess(clue, film)));
+    when(guessService.getGuesses(clue2)).thenReturn(List.of(new Guess(clue, film), new Guess(clue, film), new Guess(clue,film)));
 
     assertEquals(clue1, clueService.getClue());
   }
