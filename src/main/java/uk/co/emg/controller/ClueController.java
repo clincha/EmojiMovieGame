@@ -28,6 +28,11 @@ public class ClueController {
     this.guessService = guessService;
   }
 
+  @GetMapping("/")
+  public ModelAndView index() {
+    return clue();
+  }
+
   @GetMapping("/clue")
   public ModelAndView clue() {
     Clue clue = clueService.getClue();
@@ -44,7 +49,6 @@ public class ClueController {
     Film film = filmService.getFilm(filmId)
       .orElseThrow(IncorrectFilmIdException::new);
     return new ModelAndView("Guessed")
-      .addObject("clue", clue)
       .addObject("correct", guessService.guess(clue, film));
   }
 

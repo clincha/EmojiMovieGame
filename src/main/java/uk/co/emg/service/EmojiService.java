@@ -19,8 +19,8 @@ public class EmojiService {
 
   public static final String ACCESS_KEY = "access_key=d41710af6f06cd316334a2a8e337b984bddbb23f";
   private static final String EMOJI_API_URL = "https://emoji-api.com";
-  private ApiService apiService;
-  private EmojiRepository emojiRepository;
+  private final ApiService apiService;
+  private final EmojiRepository emojiRepository;
 
   public EmojiService(ApiService apiService, EmojiRepository emojiRepository) {
     this.apiService = apiService;

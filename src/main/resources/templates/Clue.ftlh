@@ -30,13 +30,16 @@
         <div class="row">
             <div class="col-lg-4"></div>
             <div class="col">
-                <button name="option" type="submit" class="movie-option-button btn btn-primary" value="${options[0].id?c}">${options[0].title}</button>
+                <button name="option" type="submit" class="movie-option-button btn btn-primary"
+                        value="${options[0].id?c}">${options[0].title}</button>
             </div>
             <div class="col">
-                <button name="option" type="submit" class="movie-option-button btn btn-primary" value="${options[1].id?c}">${options[1].title}</button>
+                <button name="option" type="submit" class="movie-option-button btn btn-primary"
+                        value="${options[1].id?c}">${options[1].title}</button>
             </div>
             <div class="col">
-                <button name="option" type="submit" class="movie-option-button btn btn-primary" value="${options[2].id?c}">${options[2].title}</button>
+                <button name="option" type="submit" class="movie-option-button btn btn-primary"
+                        value="${options[2].id?c}">${options[2].title}</button>
             </div>
             <div class="col-lg-4"></div>
         </div>

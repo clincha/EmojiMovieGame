@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class GenerationService {
 
-  private long generation;
+  private final long generation;
 
   public GenerationService() {
     this.generation = 0;

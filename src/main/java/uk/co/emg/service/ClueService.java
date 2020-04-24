@@ -6,27 +6,27 @@ import uk.co.emg.entity.ClueComponent;
 import uk.co.emg.entity.Emoji;
 import uk.co.emg.entity.Film;
 import uk.co.emg.entity.Guess;
-import uk.co.emg.repository.ClueComponentRepository;
 import uk.co.emg.repository.ClueRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClueService {
   public final int CLUE_GENERATION_SIZE = 10;
-  private EmojiService emojiService;
-  private FilmService filmService;
-  private ClueRepository clueRepository;
-  private ClueComponentRepository clueComponentRepository;
+  private final EmojiService emojiService;
+  private final FilmService filmService;
+  private final ClueComponentService clueComponentService;
+  private final ClueRepository clueRepository;
 
-  public ClueService(EmojiService emojiService, ClueRepository clueRepository, FilmService filmService, ClueComponentRepository clueComponentRepository) {
+  public ClueService(EmojiService emojiService, FilmService filmService, ClueComponentService clueComponentService, ClueRepository clueRepository) {
     this.emojiService = emojiService;
     this.clueRepository = clueRepository;
     this.filmService = filmService;
-    this.clueComponentRepository = clueComponentRepository;
+    this.clueComponentService = clueComponentService;
   }
 
   public void preLoad() {
@@ -50,7 +50,7 @@ public class ClueService {
     }
     clue.setClueComponents(clueComponents);
     clue = clueRepository.save(clue);
-    clueComponentRepository.saveAll(clueComponents);
+    clueComponentService.saveAll(clueComponents);
     return clue;
   }
 
@@ -78,10 +78,10 @@ public class ClueService {
     return clueRepository.findById(clueId);
   }
 
-  public Boolean guess(Clue clue, Long filmId) {
-    return clue.getFilm()
-      .getId()
-      .equals(filmId);
+  public double calculateFitness(List<Guess> guesses) {
+    return guesses
+      .stream()
+      .map(Guess::isCorrect)
+      .collect(Collectors.averagingDouble(value -> value ? 1 : 0));
   }
-
 }

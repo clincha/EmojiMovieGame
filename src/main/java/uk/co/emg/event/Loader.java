@@ -13,9 +13,9 @@ import uk.co.emg.service.FilmService;
 public class Loader {
 
   private static final Logger logger = LoggerFactory.getLogger(Loader.class);
-  private FilmService filmService;
-  private ClueService clueService;
-  private EmojiService emojiService;
+  private final FilmService filmService;
+  private final ClueService clueService;
+  private final EmojiService emojiService;
 
   public Loader(FilmService filmService, ClueService clueService, EmojiService emojiService) {
     this.filmService = filmService;
