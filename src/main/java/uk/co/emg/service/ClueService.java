@@ -39,6 +39,7 @@ public class ClueService {
       clueComponents.add(new ClueComponent(clue, emoji));
     }
     clue.setClueComponents(clueComponents);
+    clueRepository.save(clue);
     clueComponentService.saveAll(clueComponents);
   }
 
