@@ -131,6 +131,9 @@ public class FilmService {
         .equals(filmGeneration))
       .collect(Collectors.toList());
 
+    if (currentGenerationClues.isEmpty())
+      return false;
+
     boolean generationComplete = true;
     for (Clue clue : currentGenerationClues) {
       if (clue.getGuesses()

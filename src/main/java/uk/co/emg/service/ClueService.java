@@ -77,7 +77,7 @@ public class ClueService {
         .size() / 2, father.getClueComponents()
         .size()));
     child.setClueComponents(clueComponents);
-    child = clueRepository.save(child);
+    child = save(child);
     clueComponentService.saveAll(child.getClueComponents());
     return child;
   }

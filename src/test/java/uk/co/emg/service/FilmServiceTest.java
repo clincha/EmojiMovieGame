@@ -37,6 +37,37 @@ public class FilmServiceTest {
   }
 
   @Test
+  public void generationCheckTest() {
+    Film film = new Film(1, "Test Title", "Test Poster Path", "Test Overview");
+    List<Clue> clues = new ArrayList<>();
+    for (int i = 0; i < FilmService.INITIAL_CLUE_GENERATION_SIZE; i++) {
+      Clue clue = new Clue(film);
+      clues.add(clue);
+      List<Guess> guesses = new ArrayList<>();
+      for (int j = 0; j < FilmService.GENERATION_GUESS_THRESHOLD; j++) {
+        Guess guess = new Guess(clue, film);
+        guesses.add(guess);
+      }
+      clue.setGuesses(guesses);
+    }
+    film.setClues(clues);
+
+    when(clueService.save(any(Clue.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
+    when(clueService.breed(any(Clue.class), any(Clue.class))).thenReturn(new Clue(film, clues.get(0)
+      .getGeneration() + 1));
+
+    filmService.generationCheck(film);
+
+    assertEquals(film.getClues()
+      .size(), FilmService.INITIAL_CLUE_GENERATION_SIZE * 2);
+    assertEquals(2, film.getClues()
+      .stream()
+      .mapToInt(Clue::getGeneration)
+      .distinct()
+      .count());
+  }
+
+  @Test
   public void isGenerationCompleteTest() {
     Film film = new Film(1, "Test Title", "Test Poster Path", "Test Overview");
     Clue clue = new Clue(film);
@@ -67,9 +98,12 @@ public class FilmServiceTest {
 
     List<Clue> newGeneration = filmService.createNewGeneration(film);
 
-    assertTrue(newGeneration.contains(film.getClues().get(0)));
-    assertTrue(newGeneration.contains(film.getClues().get(1)));
-    assertTrue(newGeneration.contains(film.getClues().get(2)));
+    assertTrue(newGeneration.contains(film.getClues()
+      .get(0)));
+    assertTrue(newGeneration.contains(film.getClues()
+      .get(1)));
+    assertTrue(newGeneration.contains(film.getClues()
+      .get(2)));
 
     assertEquals(10, newGeneration.size());
   }
