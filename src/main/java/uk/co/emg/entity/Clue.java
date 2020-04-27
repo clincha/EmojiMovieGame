@@ -23,11 +23,14 @@ public class Clue {
 
   private Double fitness;
 
+  private Integer generation;
+
   public Clue() {
   }
 
   public Clue(Film film) {
     this.film = film;
+    this.generation = film.getGeneration();
   }
 
   public Long getId() {
@@ -63,6 +66,11 @@ public class Clue {
   }
 
   @Override
+  public int hashCode() {
+    return id.hashCode();
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -72,8 +80,11 @@ public class Clue {
     return id.equals(clue.id);
   }
 
-  @Override
-  public int hashCode() {
-    return id.hashCode();
+  private Integer getGeneration() {
+    return generation;
+  }
+
+  private void setGeneration(Integer generation) {
+    this.generation = generation;
   }
 }

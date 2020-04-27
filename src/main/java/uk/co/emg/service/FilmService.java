@@ -6,10 +6,12 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import uk.co.emg.builder.FilmBuilder;
+import uk.co.emg.entity.Clue;
 import uk.co.emg.entity.Film;
 import uk.co.emg.repository.FilmRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +49,14 @@ public class FilmService {
       }
       filmRepository.saveAll(films);
     }
+  }
+
+
+  public List<Film> getOptions(Clue clue) {
+    List<Film> films = getRandomFilmsExcludingFilm(clue.getFilm());
+    films.add(clue.getFilm());
+    Collections.shuffle(films);
+    return films;
   }
 
   public ArrayList<Film> getPopularFilms() {

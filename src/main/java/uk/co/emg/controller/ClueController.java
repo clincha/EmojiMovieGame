@@ -37,7 +37,7 @@ public class ClueController {
   @GetMapping("/clue")
   public ModelAndView clue() throws NoCluesException {
     Clue clue = clueService.getClue();
-    List<Film> options = clueService.getOptions(clue);
+    List<Film> options = filmService.getOptions(clue);
     return new ModelAndView("Clue")
       .addObject("clue", clue)
       .addObject("options", options);

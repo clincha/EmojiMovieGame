@@ -22,6 +22,8 @@ public class Film {
   @OneToMany
   List<Clue> clues;
 
+  Integer generation;
+
   public Film() {
   }
 
@@ -30,6 +32,15 @@ public class Film {
     this.title = title;
     this.posterPath = posterPath;
     this.overview = overview;
+    this.generation = 0;
+  }
+
+  public Integer getGeneration() {
+    return generation;
+  }
+
+  public void setGeneration(Integer generation) {
+    this.generation = generation;
   }
 
   public Long getId() {
@@ -73,10 +84,10 @@ public class Film {
   }
 
   @Override
-  public String toString() {
-    return "Film{" +
-      "title='" + title + '\'' +
-      '}';
+  public int hashCode() {
+    int result = id.hashCode();
+    result = 31 * result + title.hashCode();
+    return result;
   }
 
   @Override
@@ -91,9 +102,9 @@ public class Film {
   }
 
   @Override
-  public int hashCode() {
-    int result = id.hashCode();
-    result = 31 * result + title.hashCode();
-    return result;
+  public String toString() {
+    return "Film{" +
+      "title='" + title + '\'' +
+      '}';
   }
 }

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ClueService {
-  public final int CLUE_GENERATION_SIZE = 10;
+  public final int INITIAL_CLUE_GENERATION_SIZE = 10;
   private final EmojiService emojiService;
   private final FilmService filmService;
   private final ClueComponentService clueComponentService;
@@ -36,7 +36,7 @@ public class ClueService {
   public void preLoad() {
     if (clueRepository.count() == 0) {
       for (Film film : filmService.getPopularFilms()) {
-        for (int i = 0; i < CLUE_GENERATION_SIZE; i++) {
+        for (int i = 0; i < INITIAL_CLUE_GENERATION_SIZE; i++) {
           clueRepository.save(createClue(film));
         }
       }
@@ -58,6 +58,10 @@ public class ClueService {
     return clue;
   }
 
+  public Optional<Clue> getClue(Long clueId) {
+    return clueRepository.findById(clueId);
+  }
+
   public Clue getClue() throws NoCluesException {
     return getAllClues().stream()
       .min(Comparator.comparing(clue -> guessService.getGuesses(clue)
@@ -70,17 +74,6 @@ public class ClueService {
     clueRepository.findAll()
       .forEach(clues::add);
     return clues;
-  }
-
-  public List<Film> getOptions(Clue clue) {
-    List<Film> films = filmService.getRandomFilmsExcludingFilm(clue.getFilm());
-    films.add(clue.getFilm());
-    Collections.shuffle(films);
-    return films;
-  }
-
-  public Optional<Clue> getClue(Long clueId) {
-    return clueRepository.findById(clueId);
   }
 
   public double calculateFitness(Clue clue) {
