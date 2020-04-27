@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 public class ClueService {
   private final EmojiService emojiService;
   private final ClueComponentService clueComponentService;
-  private final ClueRepository clueRepository;
   private final GuessService guessService;
+  private final ClueRepository clueRepository;
 
   public ClueService(EmojiService emojiService, ClueComponentService clueComponentService, GuessService guessService, ClueRepository clueRepository) {
     this.emojiService = emojiService;
@@ -79,7 +79,23 @@ public class ClueService {
     return clueRepository.findAllByGenerationOrderByFitnessDesc(generation);
   }
 
-  public void createClue(Clue clue, Clue clue1) {
-    // Make them breed!
+  public Clue breed(Clue mother, Clue father) {
+    ArrayList<ClueComponent> clueComponents = new ArrayList<>();
+    Clue child = new Clue(mother.getFilm());
+    clueComponents.addAll(mother.getClueComponents()
+      .subList(0, mother.getClueComponents()
+        .size() / 2));
+    clueComponents.addAll(father.getClueComponents()
+      .subList(father.getClueComponents()
+        .size() / 2, father.getClueComponents()
+        .size()));
+    child.setClueComponents(clueComponents);
+    clueRepository.save(child);
+    clueComponentService.saveAll(clueComponents);
+    return child;
+  }
+
+  public Clue save(Clue clue) {
+    return clueRepository.save(clue);
   }
 }

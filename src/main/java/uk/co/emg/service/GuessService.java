@@ -11,17 +11,14 @@ import java.util.List;
 @Service
 public class GuessService {
   private final GuessRepository guessRepository;
-  private final FilmService filmService;
 
-  public GuessService(GuessRepository guessRepository, FilmService filmService) {
+  public GuessService(GuessRepository guessRepository) {
     this.guessRepository = guessRepository;
-    this.filmService = filmService;
   }
 
   public boolean guess(Clue clue, Film film) {
     Guess guess = new Guess(clue, film);
     guessRepository.save(guess);
-    filmService.generationCheck(film);
     return guess.isCorrect();
   }
 

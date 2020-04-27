@@ -95,7 +95,7 @@ public class Clue {
     return guesses;
   }
 
-  void setGuesses(List<Guess> guesses) {
+  public void setGuesses(List<Guess> guesses) {
     this.guesses = guesses;
   }
 }

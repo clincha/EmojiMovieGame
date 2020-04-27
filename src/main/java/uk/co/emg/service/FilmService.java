@@ -24,8 +24,8 @@ public class FilmService {
   public static final int FILM_GENERATION_SIZE = 3;
 
   private final ApiService apiService;
-  private final FilmRepository filmRepository;
   private final ClueService clueService;
+  private final FilmRepository filmRepository;
 
   public FilmService(ApiService apiService, FilmRepository filmRepository, ClueService clueService) {
     this.apiService = apiService;
@@ -85,8 +85,33 @@ public class FilmService {
     return filmRepository.findById(id);
   }
 
-  void generationCheck(Film film) {
+  public void generationCheck(Film film) {
     List<Clue> cluesInGeneration = clueService.getAllCluesInGeneration(film.getGeneration());
+    if (isGenerationComplete(cluesInGeneration)) {
+      for (Clue clue : cluesInGeneration) {
+        clueService.calculateFitness(clue);
+      }
+      List<Clue> clues = clueService.getFittestInGeneration(film.getGeneration());
+      film.setGeneration(film.getGeneration() + 1);
+      filmRepository.save(film);
+
+      clueService.breed(clues.get(0), clues.get(1));
+      clueService.breed(clues.get(0), clues.get(2));
+      clueService.breed(clues.get(0), clues.get(3));
+      clueService.breed(clues.get(0), clues.get(4));
+      clueService.breed(clues.get(0), clues.get(5));
+      clueService.breed(clues.get(1), clues.get(2));
+      clueService.breed(clues.get(2), clues.get(3));
+
+      for (Clue clue : clues.subList(0, 2)) {
+        Clue newGenerationClue = new Clue(film);
+        newGenerationClue.setClueComponents(clue.getClueComponents());
+        clueService.save(newGenerationClue);
+      }
+    }
+  }
+
+  public boolean isGenerationComplete(List<Clue> cluesInGeneration) {
     boolean generationComplete = true;
     for (Clue clue : cluesInGeneration) {
       if (clue.getGuesses()
@@ -95,12 +120,6 @@ public class FilmService {
         break;
       }
     }
-    if (generationComplete) {
-      for (Clue clue : cluesInGeneration) {
-        clueService.calculateFitness(clue);
-      }
-      List<Clue> clues = clueService.getFittestInGeneration(film.getGeneration());
-      clueService.createClue(clues.get(0), clues.get(1));
-    }
+    return generationComplete;
   }
 }

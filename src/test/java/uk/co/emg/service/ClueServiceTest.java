@@ -4,15 +4,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.co.emg.entity.Clue;
+import uk.co.emg.entity.ClueComponent;
+import uk.co.emg.entity.Emoji;
 import uk.co.emg.entity.Film;
 import uk.co.emg.entity.Guess;
 import uk.co.emg.exception.NoCluesException;
 import uk.co.emg.repository.ClueRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -25,13 +27,11 @@ public class ClueServiceTest {
   private final ClueRepository clueRepository = Mockito.mock(ClueRepository.class);
   @MockBean
   private final GuessService guessService = Mockito.mock(GuessService.class);
-  private ClueService clueService;
-  @Mock
+  @MockBean
+  private final ClueComponentService clueComponentService = Mockito.mock(ClueComponentService.class);
+  @MockBean
   private EmojiService emojiService;
-  @Mock
-  private FilmService filmService;
-  @Mock
-  private ClueComponentService clueComponentService;
+  private ClueService clueService;
 
   @Before
   public void before() {
@@ -54,9 +54,30 @@ public class ClueServiceTest {
 
     when(guessService.getGuesses(clue)).thenReturn(List.of(new Guess(clue, film), new Guess(clue, film)));
     when(guessService.getGuesses(clue1)).thenReturn(List.of(new Guess(clue, film)));
-    when(guessService.getGuesses(clue2)).thenReturn(List.of(new Guess(clue, film), new Guess(clue, film), new Guess(clue,film)));
+    when(guessService.getGuesses(clue2)).thenReturn(List.of(new Guess(clue, film), new Guess(clue, film), new Guess(clue, film)));
 
     assertEquals(clue1, clueService.getClue());
+  }
+
+  @Test
+  public void breedTest() {
+    Film film = new Film(1, "Test Title", "Test Poster Path", "Test Overview");
+    Clue mother = new Clue(film);
+    Clue father = new Clue(film);
+
+    ArrayList<ClueComponent> clueComponents = new ArrayList<>();
+    clueComponents.add(new ClueComponent(mother, new Emoji("smiling-face", "☺", "263A FE0F", "smileys-emotion", "face-affection", "smiling face")));
+    clueComponents.add(new ClueComponent(mother, new Emoji("frowning-face", "☹", "2639 FE0F", "smileys-emotion", "face-concerned", "frowning face")));
+
+    mother.setClueComponents(clueComponents);
+    father.setClueComponents(clueComponents);
+
+    Clue child = clueService.breed(mother, father);
+
+    assertEquals(child.getClueComponents()
+      .get(0), clueComponents.get(0));
+    assertEquals(child.getClueComponents()
+      .get(1), clueComponents.get(1));
   }
 
   @Test
