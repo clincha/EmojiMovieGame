@@ -12,8 +12,10 @@ import uk.co.emg.repository.FilmRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
@@ -86,34 +88,51 @@ public class FilmService {
   }
 
   public void generationCheck(Film film) {
-    List<Clue> cluesInGeneration = clueService.getAllCluesInGeneration(film.getGeneration());
-    if (isGenerationComplete(cluesInGeneration)) {
-      for (Clue clue : cluesInGeneration) {
-        clueService.calculateFitness(clue);
-      }
-      List<Clue> clues = clueService.getFittestInGeneration(film.getGeneration());
-      film.setGeneration(film.getGeneration() + 1);
+    if (isGenerationComplete(film)) {
+      List<Clue> newGenerationClues = createNewGeneration(film);
+
+      film.addGeneration(newGenerationClues);
+
       filmRepository.save(film);
-
-      clueService.breed(clues.get(0), clues.get(1));
-      clueService.breed(clues.get(0), clues.get(2));
-      clueService.breed(clues.get(0), clues.get(3));
-      clueService.breed(clues.get(0), clues.get(4));
-      clueService.breed(clues.get(0), clues.get(5));
-      clueService.breed(clues.get(1), clues.get(2));
-      clueService.breed(clues.get(2), clues.get(3));
-
-      for (Clue clue : clues.subList(0, 2)) {
-        Clue newGenerationClue = new Clue(film);
-        newGenerationClue.setClueComponents(clue.getClueComponents());
-        clueService.save(newGenerationClue);
-      }
     }
   }
 
-  public boolean isGenerationComplete(List<Clue> cluesInGeneration) {
+  public List<Clue> createNewGeneration(Film film) {
+    List<Clue> clues = film.getClues()
+      .stream()
+      .filter(clue -> clue.getGeneration()
+        .equals(film.getGeneration()))
+      .peek(clue -> clue.setFitness(clueService.calculateFitness(clue)))
+      .peek(clueService::save)
+      .sorted(Comparator.comparing(Clue::getFitness))
+      .collect(Collectors.toList());
+
+    ArrayList<Clue> newGenerationClues = new ArrayList<>();
+
+    for (int i = 1; i < 6; i++) {
+      newGenerationClues.add(clueService.breed(clues.get(0), clues.get(i)));
+    }
+    newGenerationClues.add(clueService.breed(clues.get(1), clues.get(2)));
+    newGenerationClues.add(clueService.breed(clues.get(2), clues.get(3)));
+
+    for (Clue clue : clues.subList(0, 3)) {
+      Clue newGenerationClue = new Clue(film, clue.getGeneration() + 1);
+      newGenerationClue.setClueComponents(clue.getClueComponents());
+      newGenerationClues.add(clueService.save(clue));
+    }
+    return newGenerationClues;
+  }
+
+  public boolean isGenerationComplete(Film film) {
+    final int filmGeneration = film.getGeneration();
+    List<Clue> currentGenerationClues = film.getClues()
+      .stream()
+      .filter(clue -> clue.getGeneration()
+        .equals(filmGeneration))
+      .collect(Collectors.toList());
+
     boolean generationComplete = true;
-    for (Clue clue : cluesInGeneration) {
+    for (Clue clue : currentGenerationClues) {
       if (clue.getGuesses()
         .size() < GENERATION_GUESS_THRESHOLD) {
         generationComplete = false;

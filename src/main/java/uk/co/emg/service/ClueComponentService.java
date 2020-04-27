@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import uk.co.emg.entity.ClueComponent;
 import uk.co.emg.repository.ClueComponentRepository;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ClueComponentService {
@@ -14,7 +14,7 @@ public class ClueComponentService {
     this.clueRepository = clueRepository;
   }
 
-  public void saveAll(ArrayList<ClueComponent> clueComponents) {
+  public void saveAll(List<ClueComponent> clueComponents) {
     clueRepository.saveAll(clueComponents);
   }
 }

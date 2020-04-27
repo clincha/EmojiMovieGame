@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(JUnit4.class)
@@ -71,6 +72,8 @@ public class ClueServiceTest {
 
     mother.setClueComponents(clueComponents);
     father.setClueComponents(clueComponents);
+
+    when(clueRepository.save(any(Clue.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
 
     Clue child = clueService.breed(mother, father);
 

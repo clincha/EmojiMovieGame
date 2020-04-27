@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Clue {
@@ -34,6 +35,11 @@ public class Clue {
   public Clue(Film film) {
     this.film = film;
     this.generation = film.getGeneration();
+  }
+
+  public Clue(Film film, Integer generation) {
+    this.film = film;
+    this.generation = generation;
   }
 
   public Long getId() {
@@ -68,22 +74,7 @@ public class Clue {
     this.fitness = fitness;
   }
 
-  @Override
-  public int hashCode() {
-    return id.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    Clue clue = (Clue) o;
-
-    return id.equals(clue.id);
-  }
-
-  private Integer getGeneration() {
+  public Integer getGeneration() {
     return generation;
   }
 
@@ -97,5 +88,32 @@ public class Clue {
 
   public void setGuesses(List<Guess> guesses) {
     this.guesses = guesses;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = film != null ? film.hashCode() : 0;
+    result = 31 * result + (clueComponents != null ? clueComponents.hashCode() : 0);
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Clue clue = (Clue) o;
+
+    if (!Objects.equals(film, clue.film)) return false;
+    return Objects.equals(clueComponents, clue.clueComponents);
+  }
+
+  @Override
+  public String toString() {
+    return "Clue{" +
+      "film=" + film +
+      ", guesses=" + guesses +
+      ", generation=" + generation +
+      '}';
   }
 }

@@ -83,10 +83,15 @@ public class Film {
     this.clues = clues;
   }
 
+  public void addGeneration(List<Clue> newGenerationClues) {
+    clues.addAll(newGenerationClues);
+  }
+
   @Override
   public int hashCode() {
-    int result = id.hashCode();
-    result = 31 * result + title.hashCode();
+    int result = title.hashCode();
+    result = 31 * result + (posterPath != null ? posterPath.hashCode() : 0);
+    result = 31 * result + overview.hashCode();
     return result;
   }
 
@@ -97,8 +102,9 @@ public class Film {
 
     Film film = (Film) o;
 
-    if (!id.equals(film.id)) return false;
-    return title.equals(film.title);
+    if (!title.equals(film.title)) return false;
+    if (posterPath != null ? !posterPath.equals(film.posterPath) : film.posterPath != null) return false;
+    return overview.equals(film.overview);
   }
 
   @Override
