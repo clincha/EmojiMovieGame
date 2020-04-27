@@ -10,7 +10,6 @@ import uk.co.emg.exception.NoCluesException;
 import uk.co.emg.repository.ClueRepository;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -18,32 +17,19 @@ import java.util.stream.Collectors;
 
 @Service
 public class ClueService {
-  public final int INITIAL_CLUE_GENERATION_SIZE = 10;
   private final EmojiService emojiService;
-  private final FilmService filmService;
   private final ClueComponentService clueComponentService;
   private final ClueRepository clueRepository;
   private final GuessService guessService;
 
-  public ClueService(EmojiService emojiService, FilmService filmService, ClueComponentService clueComponentService, GuessService guessService, ClueRepository clueRepository) {
+  public ClueService(EmojiService emojiService, ClueComponentService clueComponentService, GuessService guessService, ClueRepository clueRepository) {
     this.emojiService = emojiService;
     this.clueRepository = clueRepository;
-    this.filmService = filmService;
     this.clueComponentService = clueComponentService;
     this.guessService = guessService;
   }
 
-  public void preLoad() {
-    if (clueRepository.count() == 0) {
-      for (Film film : filmService.getPopularFilms()) {
-        for (int i = 0; i < INITIAL_CLUE_GENERATION_SIZE; i++) {
-          clueRepository.save(createClue(film));
-        }
-      }
-    }
-  }
-
-  public Clue createClue(Film film) {
+  public void createClue(Film film) {
     Clue clue = new Clue(film);
 
     //Create clue components
@@ -53,9 +39,7 @@ public class ClueService {
       clueComponents.add(new ClueComponent(clue, emoji));
     }
     clue.setClueComponents(clueComponents);
-    clue = clueRepository.save(clue);
     clueComponentService.saveAll(clueComponents);
-    return clue;
   }
 
   public Optional<Clue> getClue(Long clueId) {

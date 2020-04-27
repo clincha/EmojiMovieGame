@@ -19,14 +19,17 @@ import java.util.Optional;
 public class FilmService {
   public static final String BASE_URL = "https://api.themoviedb.org/3/";
   public static final String API_KEY = "api_key=00fa70c9a0a3d46a9d2d76f0a9c395ea";
+  public static final int INITIAL_CLUE_GENERATION_SIZE = 10;
   public static final int FILM_GENERATION_SIZE = 3;
 
   private final ApiService apiService;
   private final FilmRepository filmRepository;
+  private final ClueService clueService;
 
-  public FilmService(ApiService apiService, FilmRepository filmRepository) {
+  public FilmService(ApiService apiService, FilmRepository filmRepository, ClueService clueService) {
     this.apiService = apiService;
     this.filmRepository = filmRepository;
+    this.clueService = clueService;
   }
 
   public void preLoad() throws ParseException {
@@ -48,9 +51,14 @@ public class FilmService {
           .createFilm());
       }
       filmRepository.saveAll(films);
+
+      for (Film film : getPopularFilms()) {
+        for (int i = 0; i < INITIAL_CLUE_GENERATION_SIZE; i++) {
+          clueService.createClue(film);
+        }
+      }
     }
   }
-
 
   public List<Film> getOptions(Clue clue) {
     List<Film> films = getRandomFilmsExcludingFilm(clue.getFilm());

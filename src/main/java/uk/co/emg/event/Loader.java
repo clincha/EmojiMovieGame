@@ -35,10 +35,6 @@ public class Loader {
 
     logger.info("Film preload complete");
 
-    clueService.preLoad();
-
-    logger.info("Clue preload complete");
-
     logger.info("Application preload finished");
   }
 

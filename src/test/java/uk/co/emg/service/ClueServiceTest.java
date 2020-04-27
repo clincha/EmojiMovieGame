@@ -35,7 +35,7 @@ public class ClueServiceTest {
 
   @Before
   public void before() {
-    clueService = new ClueService(emojiService, filmService, clueComponentService, guessService, clueRepository);
+    clueService = new ClueService(emojiService, clueComponentService, guessService, clueRepository);
   }
 
   @Test
