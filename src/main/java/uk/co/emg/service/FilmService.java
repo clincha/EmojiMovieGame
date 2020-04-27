@@ -20,6 +20,7 @@ public class FilmService {
   public static final String BASE_URL = "https://api.themoviedb.org/3/";
   public static final String API_KEY = "api_key=00fa70c9a0a3d46a9d2d76f0a9c395ea";
   public static final int INITIAL_CLUE_GENERATION_SIZE = 10;
+  public static final int GENERATION_GUESS_THRESHOLD = 10;
   public static final int FILM_GENERATION_SIZE = 3;
 
   private final ApiService apiService;
@@ -82,5 +83,24 @@ public class FilmService {
 
   public Optional<Film> getFilm(Long id) {
     return filmRepository.findById(id);
+  }
+
+  void generationCheck(Film film) {
+    List<Clue> cluesInGeneration = clueService.getAllCluesInGeneration(film.getGeneration());
+    boolean generationComplete = true;
+    for (Clue clue : cluesInGeneration) {
+      if (clue.getGuesses()
+        .size() < GENERATION_GUESS_THRESHOLD) {
+        generationComplete = false;
+        break;
+      }
+    }
+    if (generationComplete) {
+      for (Clue clue : cluesInGeneration) {
+        clueService.calculateFitness(clue);
+      }
+      List<Clue> clues = clueService.getFittestInGeneration(film.getGeneration());
+      clueService.createClue(clues.get(0), clues.get(1));
+    }
   }
 }

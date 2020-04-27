@@ -21,6 +21,9 @@ public class Clue {
   @OneToMany(mappedBy = "clue")
   private List<ClueComponent> clueComponents;
 
+  @OneToMany(mappedBy = "clue")
+  private List<Guess> guesses;
+
   private Double fitness;
 
   private Integer generation;
@@ -86,5 +89,13 @@ public class Clue {
 
   private void setGeneration(Integer generation) {
     this.generation = generation;
+  }
+
+  public List<Guess> getGuesses() {
+    return guesses;
+  }
+
+  void setGuesses(List<Guess> guesses) {
+    this.guesses = guesses;
   }
 }

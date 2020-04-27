@@ -70,4 +70,16 @@ public class ClueService {
     clueRepository.save(clue);
     return fitness;
   }
+
+  List<Clue> getAllCluesInGeneration(Integer generation) {
+    return clueRepository.findAllByGeneration(generation);
+  }
+
+  public List<Clue> getFittestInGeneration(Integer generation) {
+    return clueRepository.findAllByGenerationOrderByFitnessDesc(generation);
+  }
+
+  public void createClue(Clue clue, Clue clue1) {
+    // Make them breed!
+  }
 }
