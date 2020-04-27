@@ -7,6 +7,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import uk.co.emg.builder.FilmBuilder;
 import uk.co.emg.entity.Clue;
+import uk.co.emg.entity.ClueComponent;
 import uk.co.emg.entity.Film;
 import uk.co.emg.repository.FilmRepository;
 
@@ -54,7 +55,6 @@ public class FilmService {
           .createFilm());
       }
       filmRepository.saveAll(films);
-
       for (Film film : getPopularFilms()) {
         for (int i = 0; i < INITIAL_CLUE_GENERATION_SIZE; i++) {
           clueService.createClue(film);
@@ -98,7 +98,7 @@ public class FilmService {
   }
 
   public List<Clue> createNewGeneration(Film film) {
-    List<Clue> clues = film.getClues()
+    List<Clue> clues = clueService.getAllClues(film)
       .stream()
       .filter(clue -> clue.getGeneration()
         .equals(film.getGeneration()))
@@ -117,15 +117,19 @@ public class FilmService {
 
     for (Clue clue : clues.subList(0, 3)) {
       Clue newGenerationClue = new Clue(film, clue.getGeneration() + 1);
+      ArrayList<ClueComponent> newClueComponents = new ArrayList<>();
+      for (ClueComponent clueComponent : clue.getClueComponents()) {
+        newClueComponents.add(new ClueComponent(clueComponent.getClue(), clueComponent.getEmoji()));
+      }
       newGenerationClue.setClueComponents(clue.getClueComponents());
-      newGenerationClues.add(clueService.save(clue));
+      newGenerationClues.add(clueService.save(newGenerationClue));
     }
     return newGenerationClues;
   }
 
   public boolean isGenerationComplete(Film film) {
     final int filmGeneration = film.getGeneration();
-    List<Clue> currentGenerationClues = film.getClues()
+    List<Clue> currentGenerationClues = clueService.getAllClues(film)
       .stream()
       .filter(clue -> clue.getGeneration()
         .equals(filmGeneration))

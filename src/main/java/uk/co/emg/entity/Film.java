@@ -19,7 +19,7 @@ public class Film {
   @Column(length = 100000)
   String overview;
 
-  @OneToMany
+  @OneToMany(mappedBy = "film")
   List<Clue> clues;
 
   Integer generation;
@@ -84,6 +84,7 @@ public class Film {
   }
 
   public void addGeneration(List<Clue> newGenerationClues) {
+    generation++;
     clues.addAll(newGenerationClues);
   }
 

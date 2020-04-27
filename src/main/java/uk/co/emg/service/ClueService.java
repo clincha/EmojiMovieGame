@@ -46,17 +46,11 @@ public class ClueService {
   }
 
   public Clue getClue() throws NoCluesException {
-    return getAllClues().stream()
+    return clueRepository.findAllByFitnessIsNull()
+      .stream()
       .min(Comparator.comparing(clue -> guessService.getGuesses(clue)
         .size()))
       .orElseThrow(NoCluesException::new);
-  }
-
-  List<Clue> getAllClues() {
-    ArrayList<Clue> clues = new ArrayList<>();
-    clueRepository.findAll()
-      .forEach(clues::add);
-    return clues;
   }
 
   public double calculateFitness(Clue clue) {
@@ -83,6 +77,12 @@ public class ClueService {
   }
 
   public Clue save(Clue clue) {
-    return clueRepository.save(clue);
+    clue = clueRepository.save(clue);
+    clueComponentService.saveAll(clue.getClueComponents());
+    return clue;
+  }
+
+  public List<Clue> getAllClues(Film film) {
+    return clueRepository.findAllByFilm(film);
   }
 }

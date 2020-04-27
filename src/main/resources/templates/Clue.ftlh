@@ -30,7 +30,7 @@
         <div class="row">
             <div class="col-lg-4"></div>
             <div class="col">
-                <button name="option" type="submit" class="movie-option-button btn btn-primary"
+                <button autofocus name="option" type="submit" class="movie-option-button btn btn-primary"
                         value="${options[0].id?c}">${options[0].title}</button>
             </div>
             <div class="col">

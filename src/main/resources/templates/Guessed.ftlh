@@ -36,7 +36,7 @@
         <div class="col-lg-4"></div>
         <div class="col">
             <form action="/clue">
-                <input type="submit" value="Another one!">
+                <input autofocus type="submit" value="Another one!">
             </form>
         </div>
         <div class="col-lg-4"></div>
