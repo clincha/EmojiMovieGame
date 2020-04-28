@@ -1,0 +1,13 @@
+#clue {
+    text-align: center;
+}
+
+.movie-option-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.movie-option-button {
+    width: 75%;
+}

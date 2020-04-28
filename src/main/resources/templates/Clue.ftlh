@@ -8,15 +8,17 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/Clue.css">
 
     <title>Movie Emoji Quiz</title>
 </head>
 <body>
 <form method="post" action="/guess">
     <div class="container-fluid">
-        <div class="row">
+        <div class="row mt-3">
+            <div class="col"></div>
             <div class="col">
-                <h1>
+                <h1 id="clue">
                     <#list clue.clueComponents as clueComponent>
                         <#if clueComponent.emoji?has_content>
                             ${clueComponent.emoji.character}
@@ -26,22 +28,18 @@
                     </#list>
                 </h1>
             </div>
+            <div class="col"></div>
         </div>
-        <div class="row">
-            <div class="col-lg-4"></div>
-            <div class="col">
-                <button autofocus name="option" type="submit" class="movie-option-button btn btn-primary"
-                        value="${options[0].id?c}">${options[0].title}</button>
-            </div>
-            <div class="col">
-                <button name="option" type="submit" class="movie-option-button btn btn-primary"
-                        value="${options[1].id?c}">${options[1].title}</button>
-            </div>
-            <div class="col">
-                <button name="option" type="submit" class="movie-option-button btn btn-primary"
-                        value="${options[2].id?c}">${options[2].title}</button>
-            </div>
-            <div class="col-lg-4"></div>
+        <div class="row mt-5">
+            <div class="col-3"></div>
+            <#list options as option>
+                <div class="col movie-option-container">
+                    <button <#if option?index = 1>autofocus</#if> name="option" type="submit"
+                            class="movie-option-button btn btn-primary"
+                            value="${option.id?c}">${option.title}</button>
+                </div>
+            </#list>
+            <div class="col-3"></div>
         </div>
     </div>
     <input name="clueId" type="hidden" value="${clue.id}">
