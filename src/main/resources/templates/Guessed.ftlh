@@ -27,11 +27,11 @@
         <div class="col-4"></div>
     </div>
     <div class="row mt-5">
-        <div class="col-lg-4"></div>
+        <div class="col-4"></div>
         <div id="next-clue-button-container" class="col">
             <button autofocus class="btn btn-primary" onclick="location.href='/clue'">Next Clue</button>
         </div>
-        <div class="col-lg-4"></div>
+        <div class="col-4"></div>
     </div>
 </div>
 
