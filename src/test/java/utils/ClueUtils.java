@@ -16,7 +16,7 @@ public class ClueUtils {
         clue.setClueComponents(clueComponents);
         ArrayList<Guess> guesses = new ArrayList<>();
         for (int i = 0; i < FilmService.GENERATION_GUESS_THRESHOLD; i++) {
-            guesses.add(i, new Guess(clue, film));
+            guesses.add(i, new Guess(clue, film, "1234"));
         }
         clue.setGuesses(guesses);
         return clue;

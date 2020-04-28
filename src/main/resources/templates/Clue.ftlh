@@ -50,7 +50,7 @@
             <div class="col-3"></div>
         </div>
     </div>
-    <input name="clueId" type="hidden" value="${clue.id}">
+    <input name="clueId" type="hidden" value="${clue.id?c}">
 </form>
 
 <!-- Optional JavaScript -->

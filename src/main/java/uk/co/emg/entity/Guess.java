@@ -15,12 +15,15 @@ public class Guess {
     @ManyToOne
     private Film film;
 
+    private String sessionId;
+
     public Guess() {
     }
 
-    public Guess(Clue clue, Film film) {
+    public Guess(Clue clue, Film film, String session) {
         this.clue = clue;
         this.film = film;
+        this.sessionId = session;
     }
 
     public Long getId() {
@@ -45,6 +48,14 @@ public class Guess {
 
     public void setFilm(Film userGuess) {
         this.film = userGuess;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public boolean isCorrect() {

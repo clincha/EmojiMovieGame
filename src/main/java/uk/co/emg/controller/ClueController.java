@@ -7,13 +7,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import uk.co.emg.entity.Clue;
 import uk.co.emg.entity.Film;
+import uk.co.emg.entity.Guess;
 import uk.co.emg.exception.IncorrectClueIdException;
 import uk.co.emg.exception.IncorrectFilmIdException;
 import uk.co.emg.service.ClueService;
 import uk.co.emg.service.FilmService;
 import uk.co.emg.service.GuessService;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ClueController {
@@ -29,9 +32,11 @@ public class ClueController {
     }
 
     @GetMapping("/clue")
-    public ModelAndView clue() {
-        // Clue service can be given a list of clues already seen by the user and then they won't get repeat clues
-        Clue clue = clueService.getClue(List.of());
+    public ModelAndView clue(HttpSession session) {
+        Clue clue = clueService.getClue(guessService.getGuesses(session).stream()
+                .map(Guess::getClue)
+                .collect(Collectors.toList())
+        );
         List<Film> options = filmService.getOptions(clue);
         return new ModelAndView("Clue")
                 .addObject("clue", clue)
@@ -39,10 +44,10 @@ public class ClueController {
     }
 
     @PostMapping("/guess")
-    public ModelAndView guess(@RequestParam("option") Long filmId, @RequestParam("clueId") Long clueId) throws IncorrectClueIdException, IncorrectFilmIdException {
+    public ModelAndView guess(HttpSession session, @RequestParam("option") Long filmId, @RequestParam("clueId") Long clueId) throws IncorrectClueIdException, IncorrectFilmIdException {
         Clue clue = clueService.getClue(clueId).orElseThrow(IncorrectClueIdException::new);
         Film film = filmService.getFilm(filmId).orElseThrow(IncorrectFilmIdException::new);
-        Boolean isCorrect = guessService.guess(clue, film);
+        Boolean isCorrect = guessService.guess(clue, film, session.getId());
         filmService.generationCheck(film);
         return new ModelAndView("Guessed")
                 .addObject("correct", isCorrect)

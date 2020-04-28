@@ -96,8 +96,8 @@ public class ClueServiceTest {
 
         Clue clue = new Clue(correctFilm);
 
-        Guess correctGuess = new Guess(clue, correctFilm);
-        Guess wrongGuess = new Guess(clue, wrongFilm);
+        Guess correctGuess = new Guess(clue, correctFilm, "1234");
+        Guess wrongGuess = new Guess(clue, wrongFilm, "1234");
 
         when(guessService.getGuesses(clue)).thenReturn(List.of(correctGuess, wrongGuess));
         when(clueRepository.save(clue)).thenReturn(clue);

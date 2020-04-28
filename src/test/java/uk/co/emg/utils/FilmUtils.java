@@ -19,7 +19,7 @@ public class FilmUtils {
             clue.setClueComponents(clueComponents);
             ArrayList<Guess> guesses = new ArrayList<>();
             for (int j = 0; j < FilmService.GENERATION_GUESS_THRESHOLD; j++) {
-                guesses.add(j, new Guess(clue, film));
+                guesses.add(j, new Guess(clue, film, "1234"));
             }
             clue.setGuesses(guesses);
             clues.add(clue);

@@ -12,4 +12,5 @@ public interface GuessRepository extends CrudRepository<Guess, Long> {
 
     List<Guess> findAllByClue(Clue clue);
 
+    List<Guess> findAllBySessionId(String session);
 }
