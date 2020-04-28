@@ -30,6 +30,7 @@ public class ClueController {
 
     @GetMapping("/clue")
     public ModelAndView clue() {
+        // Clue service can be given a list of clues already seen by the user and then they won't get repeat clues
         Clue clue = clueService.getClue(List.of());
         List<Film> options = filmService.getOptions(clue);
         return new ModelAndView("Clue")
