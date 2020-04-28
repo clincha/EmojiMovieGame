@@ -45,10 +45,14 @@ public class ClueService {
     }
 
     public Clue getClue() throws NoCluesException {
-        return clueRepository.findAllByFitnessIsNull()
-                .stream()
-                .min(Comparator.comparing(clue -> guessService.getGuesses(clue)
-                        .size()))
+        final int minGeneration = clueRepository.findAllByFitnessIsNull().stream()
+                .map(Clue::getGeneration)
+                .min(Integer::compareTo)
+                .orElse(-1);
+
+        return clueRepository.findAllByFitnessIsNull().stream()
+                .filter(clue -> clue.getGeneration() == minGeneration)
+                .min(Comparator.comparing(clue -> guessService.getGuesses(clue).size()))
                 .orElseThrow(NoCluesException::new);
     }
 
@@ -66,18 +70,21 @@ public class ClueService {
                 .subList(father.getClueComponents()
                         .size() / 2, father.getClueComponents()
                         .size()));
+        if (clueComponents.size() == 0) {
+            clueComponents.addAll(mother.getClueComponents());
+            clueComponents.addAll(father.getClueComponents());
+        }
         for (int i = 0; i < clueComponents.size(); i++) {
-            clueComponents.set(i, new ClueComponent(clueComponents.get(i)));
+            clueComponents.set(i, new ClueComponent(child, clueComponents.get(i).getEmoji()));
         }
         child.setClueComponents(clueComponents);
         child = save(child);
-        clueComponentService.saveAll(child.getClueComponents());
         return child;
     }
 
     public Clue save(Clue clue) {
         clue = clueRepository.save(clue);
-        clueComponentService.saveAll(clue.getClueComponents());
+        clue.setClueComponents(clueComponentService.saveAll(clue.getClueComponents()));
         return clue;
     }
 

@@ -1,9 +1,9 @@
 package uk.co.emg.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Entity
 public class Clue {
@@ -38,10 +38,13 @@ public class Clue {
         this.generation = generation;
     }
 
+    @SuppressWarnings("CopyConstructorMissesField")
     public Clue(Clue clue) {
         this.film = clue.getFilm();
+        this.clueComponents = clue.getClueComponents().stream()
+                .map(clueComponent -> new ClueComponent(this, clueComponent.getEmoji()))
+                .collect(Collectors.toList());
         this.generation = clue.getGeneration() + 1;
-        this.clueComponents = new ArrayList<>(clue.getClueComponents());
     }
 
     public Clue(long id, Film film) {

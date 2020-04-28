@@ -98,16 +98,14 @@ public class FilmService {
                 .peek(clueService::save)
                 .sorted(Comparator.comparing(Clue::getFitness))
                 .collect(Collectors.toList());
-
         ArrayList<Clue> newGenerationClues = new ArrayList<>();
-
-        for (int i = 1; i < 6; i++) {
-            newGenerationClues.add(clueService.breed(clues.get(0), clues.get(i)));
-        }
+        for (int i = 1; i < 6; i++) newGenerationClues.add(clueService.breed(clues.get(0), clues.get(i)));
         newGenerationClues.add(clueService.breed(clues.get(1), clues.get(2)));
         newGenerationClues.add(clueService.breed(clues.get(2), clues.get(3)));
-
-        newGenerationClues.addAll(clues.subList(0, 3).stream().map(Clue::new).collect(Collectors.toList()));
+        newGenerationClues.addAll(clues.subList(0, 3).stream()
+                .map(Clue::new)
+                .peek(clueService::save)
+                .collect(Collectors.toList()));
         return newGenerationClues;
     }
 

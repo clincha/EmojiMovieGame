@@ -14,7 +14,7 @@ public class ClueComponentService {
         this.clueRepository = clueRepository;
     }
 
-    public void saveAll(List<ClueComponent> clueComponents) {
-        clueRepository.saveAll(clueComponents);
+    public List<ClueComponent> saveAll(List<ClueComponent> clueComponents) {
+        return (List<ClueComponent>) clueRepository.saveAll(clueComponents);
     }
 }

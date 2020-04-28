@@ -70,6 +70,7 @@ public class ClueServiceTest {
         father.setClueComponents(clueComponents);
 
         when(clueRepository.save(any(Clue.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
+        when(clueComponentService.saveAll(any())).then(invocationOnMock -> invocationOnMock.getArguments()[0]);
 
         Clue child = clueService.breed(mother, father);
 

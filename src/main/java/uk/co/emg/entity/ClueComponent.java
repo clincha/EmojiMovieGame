@@ -24,12 +24,6 @@ public class ClueComponent {
         this.emoji = emoji;
     }
 
-    @SuppressWarnings("CopyConstructorMissesField")
-    public ClueComponent(ClueComponent clueComponent) {
-        this.clue = clueComponent.getClue();
-        this.emoji = clueComponent.getEmoji();
-    }
-
     public Long getId() {
         return id;
     }
