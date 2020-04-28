@@ -16,22 +16,31 @@
 
 <div class="container-fluid">
     <div class="row mt-3">
-        <div class="col-4"></div>
-        <div class="col">
+        <div class="col"></div>
+        <div class="col-4">
             <#if correct>
                 <h1 class="guess-result">Correct</h1>
             <#else >
                 <h1 class="guess-result">Wrong</h1>
             </#if>
         </div>
-        <div class="col-4"></div>
+        <div class="col"></div>
     </div>
-    <div class="row mt-5">
-        <div class="col-4"></div>
-        <div id="next-clue-button-container" class="col">
+    <div class="row mt-3">
+        <div class="col"></div>
+        <div class="col film-content-container">
+            <img id="film-poster" class="film-content" src="https://image.tmdb.org/t/p/w342/${film.posterPath}"
+                 alt="${film.title} poster"/>
+            <p id="film-overview" class="film-content">${film.overview}</p>
+        </div>
+        <div class="col"></div>
+    </div>
+    <div class="row mt-3">
+        <div class="col"></div>
+        <div id="next-clue-button-container" class="col-4">
             <button autofocus class="btn btn-primary" onclick="location.href='/clue'">Next Clue</button>
         </div>
-        <div class="col-4"></div>
+        <div class="col"></div>
     </div>
 </div>
 

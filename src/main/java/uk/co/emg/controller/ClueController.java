@@ -52,7 +52,8 @@ public class ClueController {
         Boolean isCorrect = guessService.guess(clue, film);
         filmService.generationCheck(film);
         return new ModelAndView("Guessed")
-                .addObject("correct", isCorrect);
+                .addObject("correct", isCorrect)
+                .addObject("film", clue.getFilm());
     }
 
 }

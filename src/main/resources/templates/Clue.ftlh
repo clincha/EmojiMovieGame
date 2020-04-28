@@ -8,14 +8,22 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="../static/css/clue.css">
+    <link rel="stylesheet" href="css/clue.css">
 
     <title>Movie Emoji Quiz</title>
 </head>
 <body>
 <form method="post" action="/guess">
     <div class="container-fluid">
-        <div class="row mt-3">
+        <div class="row mt-5">
+            <div class="col"></div>
+            <div class="col centred-container">
+                <span class="badge badge-info mx-1">Generation ${clue.generation}</span>
+                <span class="badge badge-warning mx-1">Computer Generated</span>
+            </div>
+            <div class="col"></div>
+        </div>
+        <div class="row mt-5">
             <div class="col"></div>
             <div class="col">
                 <h1 id="clue">
@@ -33,7 +41,7 @@
         <div class="row mt-5">
             <div class="col-3"></div>
             <#list options as option>
-                <div class="col movie-option-container">
+                <div class="col centred-container">
                     <button <#if option?index = 1>autofocus</#if> name="option" type="submit"
                             class="movie-option-button btn btn-primary"
                             value="${option.id?c}">${option.title}</button>
