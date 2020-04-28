@@ -18,7 +18,7 @@ public class FilmService {
     public static final String BASE_URL = "https://api.themoviedb.org/3/";
     public static final String API_KEY = "api_key=00fa70c9a0a3d46a9d2d76f0a9c395ea";
     public static final int INITIAL_CLUE_GENERATION_SIZE = 10;
-    public static final int GENERATION_GUESS_THRESHOLD = 10;
+    public static final int GENERATION_GUESS_THRESHOLD = 5;
     public static final int FILM_GENERATION_SIZE = 3;
 
     private final ApiService apiService;
