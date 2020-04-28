@@ -1,7 +1,10 @@
 package uk.co.emg.service;
 
 import org.springframework.stereotype.Service;
-import uk.co.emg.entity.*;
+import uk.co.emg.entity.Clue;
+import uk.co.emg.entity.ClueComponent;
+import uk.co.emg.entity.Emoji;
+import uk.co.emg.entity.Film;
 import uk.co.emg.exception.NoCluesException;
 import uk.co.emg.repository.ClueRepository;
 
@@ -50,10 +53,7 @@ public class ClueService {
     }
 
     public double calculateFitness(Clue clue) {
-        return guessService.getGuesses(clue)
-                .stream()
-                .map(Guess::isCorrect)
-                .collect(Collectors.averagingDouble(value -> value ? 1 : 0));
+        return guessService.getGuesses(clue).stream().collect(Collectors.averagingDouble(guess -> guess.isCorrect() ? 1 : 0));
     }
 
     public Clue breed(Clue mother, Clue father) {

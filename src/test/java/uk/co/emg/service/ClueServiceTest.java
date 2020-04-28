@@ -57,7 +57,7 @@ public class ClueServiceTest {
     }
 
     @Test
-    public void breedTest() {
+    public void childContainsHalfMotherAndHalfFatherInCorrectOrder() {
         Film film = new Film(1, "Test Title", "Test Poster Path", "Test Overview");
         Clue mother = new Clue(film);
         Clue father = new Clue(film);
@@ -73,16 +73,14 @@ public class ClueServiceTest {
 
         Clue child = clueService.breed(mother, father);
 
-        assertEquals(child.getClueComponents()
-                .get(0), clueComponents.get(0));
-        assertEquals(child.getClueComponents()
-                .get(1), clueComponents.get(1));
+        assertEquals(child.getClueComponents().get(0), clueComponents.get(0));
+        assertEquals(child.getClueComponents().get(1), clueComponents.get(1));
     }
 
     @Test
     public void calculateFitnessTest() {
         Film correctFilm = new Film(1, "Test Title", "Test Poster Path", "Test Overview");
-        Film wrongFilm = new Film(2, "Test Title", "Test Poster Path", "Test Overview");
+        Film wrongFilm = new Film(2, "Wrong Test Title", "WrongTest Poster Path", "Wrong Test Overview");
 
         Clue clue = new Clue(correctFilm);
 

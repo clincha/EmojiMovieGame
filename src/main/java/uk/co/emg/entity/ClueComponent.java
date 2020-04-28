@@ -1,6 +1,7 @@
 package uk.co.emg.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class ClueComponent {
@@ -23,6 +24,7 @@ public class ClueComponent {
         this.emoji = emoji;
     }
 
+    @SuppressWarnings("CopyConstructorMissesField")
     public ClueComponent(ClueComponent clueComponent) {
         this.clue = clueComponent.getClue();
         this.emoji = clueComponent.getEmoji();
@@ -50,5 +52,20 @@ public class ClueComponent {
 
     public void setEmoji(Emoji emoji) {
         this.emoji = emoji;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ClueComponent that = (ClueComponent) o;
+
+        return Objects.equals(emoji, that.emoji);
+    }
+
+    @Override
+    public int hashCode() {
+        return emoji != null ? emoji.hashCode() : 0;
     }
 }

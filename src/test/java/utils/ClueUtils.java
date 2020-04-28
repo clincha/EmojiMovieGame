@@ -10,10 +10,10 @@ public class ClueUtils {
     public static Clue getClue() {
         Film film = new Film(1, "Test Title", "Test Poster Path", "Test Overview");
         Clue clue = new Clue(1, film);
-        clue.setClueComponents(List.of(
-                new ClueComponent(clue, new Emoji("smiling-face", "☺", "263A FE0F", "smileys-emotion", "face-affection", "smiling face")),
-                new ClueComponent(clue, new Emoji("frowning-face", "☹", "2639 FE0F", "smileys-emotion", "face-concerned", "frowning face"))
-        ));
+        List<ClueComponent> clueComponents = new ArrayList<>();
+        clueComponents.add(new ClueComponent(clue, new Emoji("smiling-face", "☺", "263A FE0F", "smileys-emotion", "face-affection", "smiling face")));
+        clueComponents.add(new ClueComponent(clue, new Emoji("frowning-face", "☹", "2639 FE0F", "smileys-emotion", "face-concerned", "frowning face")));
+        clue.setClueComponents(clueComponents);
         ArrayList<Guess> guesses = new ArrayList<>();
         for (int i = 0; i < FilmService.GENERATION_GUESS_THRESHOLD; i++) {
             guesses.add(i, new Guess(clue, film));

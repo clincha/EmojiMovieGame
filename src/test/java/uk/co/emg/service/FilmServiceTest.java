@@ -37,10 +37,10 @@ public class FilmServiceTest {
     }
 
     @Test
-    public void generationCheckTest() {
+    public void newGenerationDoesNotDestroyOldGeneration() {
         Film film = FilmUtils.getFilm();
 
-        when(clueService.getAllClues(film)).thenReturn(ClueUtils.getClues());
+        when(clueService.getAllClues(film)).thenReturn(film.getClues());
         when(clueService.save(any(Clue.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
         when(clueService.breed(any(Clue.class), any(Clue.class))).thenReturn(ClueUtils.getClue());
 
@@ -53,6 +53,7 @@ public class FilmServiceTest {
     @Test
     public void isGenerationCompleteTest() {
         Film film = FilmUtils.getFilm();
+        when(clueService.getAllClues(film)).thenReturn(film.getClues());
         assertTrue(filmService.isGenerationComplete(film));
         film.getClues().get(0).setGuesses(film.getClues().get(0).getGuesses().subList(0, 2));
         assertFalse(filmService.isGenerationComplete(film));
