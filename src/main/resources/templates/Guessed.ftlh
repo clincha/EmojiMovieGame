@@ -8,36 +8,28 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/guessed.css"/>
 
     <title>Movie Emoji Quiz</title>
 </head>
 <body>
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-4"></div>
+    <div class="row mt-3">
+        <div class="col-4"></div>
         <div class="col">
             <#if correct>
-                <h1>Correct!</h1>
+                <h1 class="guess-result">Correct</h1>
             <#else >
-                <h1>Wrong!</h1>
+                <h1 class="guess-result">Wrong</h1>
             </#if>
         </div>
-        <div class="col-md-4"></div>
+        <div class="col-4"></div>
     </div>
-    <div class="row">
-        <div class="col"></div>
-        <div class="col">
-
-        </div>
-        <div class="col"></div>
-    </div>
-    <div class="row">
+    <div class="row mt-5">
         <div class="col-lg-4"></div>
-        <div class="col">
-            <form action="/clue">
-                <input autofocus type="submit" value="Another one!">
-            </form>
+        <div id="next-clue-button-container" class="col">
+            <button autofocus class="btn btn-primary" onclick="location.href='/clue'">Next Clue</button>
         </div>
         <div class="col-lg-4"></div>
     </div>
