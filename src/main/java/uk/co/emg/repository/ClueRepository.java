@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ClueRepository extends CrudRepository<Clue, Long> {
-  List<Clue> findAllByFilm(Film film);
+    List<Clue> findAllByFilm(Film film);
 
-  List<Clue> findAllByFitnessIsNull();
+    List<Clue> findAllByFitnessIsNull();
 }

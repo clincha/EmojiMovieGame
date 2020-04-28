@@ -8,13 +8,13 @@ import java.util.List;
 
 @Service
 public class ClueComponentService {
-  private final ClueComponentRepository clueRepository;
+    private final ClueComponentRepository clueRepository;
 
-  public ClueComponentService(ClueComponentRepository clueRepository) {
-    this.clueRepository = clueRepository;
-  }
+    public ClueComponentService(ClueComponentRepository clueRepository) {
+        this.clueRepository = clueRepository;
+    }
 
-  public void saveAll(List<ClueComponent> clueComponents) {
-    clueRepository.saveAll(clueComponents);
-  }
+    public void saveAll(List<ClueComponent> clueComponents) {
+        clueRepository.saveAll(clueComponents);
+    }
 }

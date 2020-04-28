@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface GuessRepository extends CrudRepository<Guess, Long> {
 
-  List<Guess> findAllByClue(Clue clue);
+    List<Guess> findAllByClue(Clue clue);
 
 }

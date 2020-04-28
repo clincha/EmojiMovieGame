@@ -19,40 +19,40 @@ import java.util.List;
 @Controller
 public class ClueController {
 
-  private final ClueService clueService;
-  private final FilmService filmService;
-  private final GuessService guessService;
+    private final ClueService clueService;
+    private final FilmService filmService;
+    private final GuessService guessService;
 
-  public ClueController(ClueService clueService, FilmService filmService, GuessService guessService) {
-    this.clueService = clueService;
-    this.filmService = filmService;
-    this.guessService = guessService;
-  }
+    public ClueController(ClueService clueService, FilmService filmService, GuessService guessService) {
+        this.clueService = clueService;
+        this.filmService = filmService;
+        this.guessService = guessService;
+    }
 
-  @GetMapping("/")
-  public ModelAndView index() throws NoCluesException {
-    return clue();
-  }
+    @GetMapping("/")
+    public ModelAndView index() throws NoCluesException {
+        return clue();
+    }
 
-  @GetMapping("/clue")
-  public ModelAndView clue() throws NoCluesException {
-    Clue clue = clueService.getClue();
-    List<Film> options = filmService.getOptions(clue);
-    return new ModelAndView("Clue")
-      .addObject("clue", clue)
-      .addObject("options", options);
-  }
+    @GetMapping("/clue")
+    public ModelAndView clue() throws NoCluesException {
+        Clue clue = clueService.getClue();
+        List<Film> options = filmService.getOptions(clue);
+        return new ModelAndView("Clue")
+                .addObject("clue", clue)
+                .addObject("options", options);
+    }
 
-  @PostMapping("/guess")
-  public ModelAndView guess(@RequestParam("option") Long filmId, @RequestParam("clueId") Long clueId) throws IncorrectClueIdException, IncorrectFilmIdException {
-    Clue clue = clueService.getClue(clueId)
-      .orElseThrow(IncorrectClueIdException::new);
-    Film film = filmService.getFilm(filmId)
-      .orElseThrow(IncorrectFilmIdException::new);
-    Boolean isCorrect = guessService.guess(clue, film);
-    filmService.generationCheck(film);
-    return new ModelAndView("Guessed")
-      .addObject("correct", isCorrect);
-  }
+    @PostMapping("/guess")
+    public ModelAndView guess(@RequestParam("option") Long filmId, @RequestParam("clueId") Long clueId) throws IncorrectClueIdException, IncorrectFilmIdException {
+        Clue clue = clueService.getClue(clueId)
+                .orElseThrow(IncorrectClueIdException::new);
+        Film film = filmService.getFilm(filmId)
+                .orElseThrow(IncorrectFilmIdException::new);
+        Boolean isCorrect = guessService.guess(clue, film);
+        filmService.generationCheck(film);
+        return new ModelAndView("Guessed")
+                .addObject("correct", isCorrect);
+    }
 
 }

@@ -1,53 +1,54 @@
 package uk.co.emg.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class ClueComponent {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long id;
 
-  @ManyToOne
-  Clue clue;
+    @ManyToOne
+    Clue clue;
 
-  @ManyToOne
-  Emoji emoji;
+    @ManyToOne
+    Emoji emoji;
 
-  public ClueComponent() {
-  }
+    public ClueComponent() {
+    }
 
-  public ClueComponent(Clue clue, Emoji emoji) {
-    this.clue = clue;
-    this.emoji = emoji;
-  }
+    public ClueComponent(Clue clue, Emoji emoji) {
+        this.clue = clue;
+        this.emoji = emoji;
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public ClueComponent(ClueComponent clueComponent) {
+        this.clue = clueComponent.getClue();
+        this.emoji = clueComponent.getEmoji();
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public Clue getClue() {
-    return clue;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public void setClue(Clue clue) {
-    this.clue = clue;
-  }
+    public Clue getClue() {
+        return clue;
+    }
 
-  public Emoji getEmoji() {
-    return emoji;
-  }
+    public void setClue(Clue clue) {
+        this.clue = clue;
+    }
 
-  public void setEmoji(Emoji emoji) {
-    this.emoji = emoji;
-  }
+    public Emoji getEmoji() {
+        return emoji;
+    }
+
+    public void setEmoji(Emoji emoji) {
+        this.emoji = emoji;
+    }
 }

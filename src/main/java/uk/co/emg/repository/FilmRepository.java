@@ -9,6 +9,6 @@ import java.util.Optional;
 @Repository
 public interface FilmRepository extends CrudRepository<Film, Long> {
 
-  Optional<Film> findByTitleEquals(String title);
+    Optional<Film> findByTitleEquals(String title);
 
 }

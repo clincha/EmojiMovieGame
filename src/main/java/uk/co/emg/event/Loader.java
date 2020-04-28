@@ -12,30 +12,30 @@ import uk.co.emg.service.FilmService;
 @Component
 public class Loader {
 
-  private static final Logger logger = LoggerFactory.getLogger(Loader.class);
-  private final FilmService filmService;
-  private final ClueService clueService;
-  private final EmojiService emojiService;
+    private static final Logger logger = LoggerFactory.getLogger(Loader.class);
+    private final FilmService filmService;
+    private final ClueService clueService;
+    private final EmojiService emojiService;
 
-  public Loader(FilmService filmService, ClueService clueService, EmojiService emojiService) {
-    this.filmService = filmService;
-    this.clueService = clueService;
-    this.emojiService = emojiService;
-  }
+    public Loader(FilmService filmService, ClueService clueService, EmojiService emojiService) {
+        this.filmService = filmService;
+        this.clueService = clueService;
+        this.emojiService = emojiService;
+    }
 
-  @EventListener(ApplicationStartedEvent.class)
-  public void createPopulation() throws Exception {
-    logger.info("Application preload has begun");
+    @EventListener(ApplicationStartedEvent.class)
+    public void createPopulation() throws Exception {
+        logger.info("Application preload has begun");
 
-    emojiService.preLoad();
+        emojiService.preLoad();
 
-    logger.info("Emoji preload complete");
+        logger.info("Emoji preload complete");
 
-    filmService.preLoad();
+        filmService.preLoad();
 
-    logger.info("Film preload complete");
+        logger.info("Film preload complete");
 
-    logger.info("Application preload finished");
-  }
+        logger.info("Application preload finished");
+    }
 
 }

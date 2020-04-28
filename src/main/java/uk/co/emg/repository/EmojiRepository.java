@@ -9,6 +9,6 @@ import java.util.ArrayList;
 @Repository
 public interface EmojiRepository extends CrudRepository<Emoji, String> {
 
-  ArrayList<Emoji> findEmojiBySlugContains(String searchTerm);
+    ArrayList<Emoji> findEmojiBySlugContains(String searchTerm);
 
 }

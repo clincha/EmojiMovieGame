@@ -1,11 +1,6 @@
 package uk.co.emg.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -13,108 +8,120 @@ import java.util.Objects;
 @Entity
 public class Clue {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-  @ManyToOne
-  private Film film;
+    @ManyToOne
+    private Film film;
 
-  @OneToMany(mappedBy = "clue")
-  private List<ClueComponent> clueComponents;
+    @OneToMany(mappedBy = "clue")
+    private List<ClueComponent> clueComponents;
 
-  @OneToMany(mappedBy = "clue")
-  private List<Guess> guesses;
+    @OneToMany(mappedBy = "clue")
+    private List<Guess> guesses;
 
-  private Double fitness;
+    private Double fitness;
 
-  private Integer generation;
+    private Integer generation;
 
-  public Clue() {
-  }
+    public Clue() {
+    }
 
-  public Clue(Film film) {
-    this.film = film;
-    this.generation = film.getGeneration();
-  }
+    public Clue(Film film) {
+        this.film = film;
+        this.generation = film.getGeneration();
+    }
 
-  public Clue(Film film, Integer generation) {
-    this.film = film;
-    this.generation = generation;
-  }
+    public Clue(Film film, Integer generation) {
+        this.film = film;
+        this.generation = generation;
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public Clue(Clue clue) {
+        this.film = clue.getFilm();
+        this.generation = clue.getGeneration() + 1;
+        this.clueComponents = new ArrayList<>(clue.getClueComponents());
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public Clue(long id, Film film) {
+        this.id = id;
+        this.film = film;
+        this.generation = 0;
+    }
 
-  public Film getFilm() {
-    return film;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public void setFilm(Film film) {
-    this.film = film;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public List<ClueComponent> getClueComponents() {
-    return clueComponents;
-  }
+    public Film getFilm() {
+        return film;
+    }
 
-  public void setClueComponents(List<ClueComponent> clueComponents) {
-    this.clueComponents = clueComponents;
-  }
+    public void setFilm(Film film) {
+        this.film = film;
+    }
 
-  public Double getFitness() {
-    return fitness;
-  }
+    public List<ClueComponent> getClueComponents() {
+        return clueComponents;
+    }
 
-  public void setFitness(Double fitness) {
-    this.fitness = fitness;
-  }
+    public void setClueComponents(List<ClueComponent> clueComponents) {
+        this.clueComponents = clueComponents;
+    }
 
-  public Integer getGeneration() {
-    return generation;
-  }
+    public Double getFitness() {
+        return fitness;
+    }
 
-  private void setGeneration(Integer generation) {
-    this.generation = generation;
-  }
+    public void setFitness(Double fitness) {
+        this.fitness = fitness;
+    }
 
-  public List<Guess> getGuesses() {
-    return guesses;
-  }
+    public Integer getGeneration() {
+        return generation;
+    }
 
-  public void setGuesses(List<Guess> guesses) {
-    this.guesses = guesses;
-  }
+    private void setGeneration(Integer generation) {
+        this.generation = generation;
+    }
 
-  @Override
-  public int hashCode() {
-    int result = film != null ? film.hashCode() : 0;
-    result = 31 * result + (clueComponents != null ? clueComponents.hashCode() : 0);
-    return result;
-  }
+    public List<Guess> getGuesses() {
+        return guesses;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    public void setGuesses(List<Guess> guesses) {
+        this.guesses = guesses;
+    }
 
-    Clue clue = (Clue) o;
+    @Override
+    public int hashCode() {
+        int result = film != null ? film.hashCode() : 0;
+        result = 31 * result + (clueComponents != null ? clueComponents.hashCode() : 0);
+        return result;
+    }
 
-    if (!Objects.equals(film, clue.film)) return false;
-    return Objects.equals(clueComponents, clue.clueComponents);
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-  @Override
-  public String toString() {
-    return "Clue{" +
-      "film=" + film +
-      ", guesses=" + guesses +
-      ", generation=" + generation +
-      '}';
-  }
+        Clue clue = (Clue) o;
+
+        if (!Objects.equals(film, clue.film)) return false;
+        return Objects.equals(clueComponents, clue.clueComponents);
+    }
+
+    @Override
+    public String toString() {
+        return "Clue{" +
+                "film=" + film +
+                ", guesses=" + guesses +
+                ", generation=" + generation +
+                '}';
+    }
 }
