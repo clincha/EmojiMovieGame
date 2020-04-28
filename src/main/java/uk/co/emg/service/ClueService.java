@@ -6,12 +6,14 @@ import uk.co.emg.entity.ClueComponent;
 import uk.co.emg.entity.Emoji;
 import uk.co.emg.entity.Film;
 import uk.co.emg.exception.NoCluesException;
+import uk.co.emg.exception.NoFilmsException;
 import uk.co.emg.repository.ClueRepository;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,16 +46,16 @@ public class ClueService {
         return clueRepository.findById(clueId);
     }
 
-    public Clue getClue() throws NoCluesException {
-        final int minGeneration = clueRepository.findAllByFitnessIsNull().stream()
-                .map(Clue::getGeneration)
-                .min(Integer::compareTo)
-                .orElse(-1);
-
-        return clueRepository.findAllByFitnessIsNull().stream()
-                .filter(clue -> clue.getGeneration() == minGeneration)
-                .min(Comparator.comparing(clue -> guessService.getGuesses(clue).size()))
-                .orElseThrow(NoCluesException::new);
+    public Clue getClue(List<Clue> alreadySeenClues) {
+        Random random = new Random();
+        List<Clue> currentGenerationClues = clueRepository.findAllByFitnessIsNull();
+        List<Clue> cluesNotYetSeen = currentGenerationClues.stream()
+                .filter(clue -> !alreadySeenClues.contains(clue))
+                .collect(Collectors.toList());
+        if (cluesNotYetSeen.isEmpty()) {
+            return currentGenerationClues.get(random.nextInt(currentGenerationClues.size()));
+        }
+        return cluesNotYetSeen.get(random.nextInt(cluesNotYetSeen.size()));
     }
 
     public double calculateFitness(Clue clue) {

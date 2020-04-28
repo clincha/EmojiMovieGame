@@ -7,13 +7,15 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.co.emg.entity.*;
-import uk.co.emg.exception.NoCluesException;
 import uk.co.emg.repository.ClueRepository;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -36,24 +38,33 @@ public class ClueServiceTest {
     }
 
     @Test
-    public void getClueTest() throws NoCluesException {
-        Film film = new Film(1, "Test Title", "Test Poster Path", "Test Overview");
+    public void newGetClueTest() {
+        ArrayList<Film> films = new ArrayList<>(3);
+        for (int i = 0; i < 3; i++) {
+            Film film = new Film(i, "Test " + i + " Title", "Test " + i + " Poster Path", "Test " + i + " Overview");
+            ArrayList<Clue> clues = new ArrayList<>(3);
+            for (int j = 0; j < 3; j++) {
+                Clue clue = new Clue(i * 3 + j, film);
+                clues.add(clue);
+            }
+            film.setClues(clues);
+            films.add(film);
+        }
 
-        Clue clue = new Clue(film);
-        Clue clue1 = new Clue(film);
-        Clue clue2 = new Clue(film);
+        when(clueRepository.findAllByFitnessIsNull()).thenReturn(films.stream()
+                .map(Film::getClues)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList())
+        );
 
-        clue.setId(0L);
-        clue1.setId(1L);
-        clue2.setId(2L);
-
-        when(clueRepository.findAllByFitnessIsNull()).thenReturn(List.of(clue, clue1, clue2));
-
-        when(guessService.getGuesses(clue)).thenReturn(List.of(new Guess(clue, film), new Guess(clue, film)));
-        when(guessService.getGuesses(clue1)).thenReturn(List.of(new Guess(clue, film)));
-        when(guessService.getGuesses(clue2)).thenReturn(List.of(new Guess(clue, film), new Guess(clue, film), new Guess(clue, film)));
-
-        assertEquals(clue1, clueService.getClue());
+        ArrayList<Clue> usedClues = new ArrayList<>(9);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                Clue clue = clueService.getClue(usedClues);
+                assertFalse(usedClues.contains(clue));
+                usedClues.add(films.get(j).getClues().get(i));
+            }
+        }
     }
 
     @Test

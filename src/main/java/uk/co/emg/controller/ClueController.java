@@ -9,7 +9,6 @@ import uk.co.emg.entity.Clue;
 import uk.co.emg.entity.Film;
 import uk.co.emg.exception.IncorrectClueIdException;
 import uk.co.emg.exception.IncorrectFilmIdException;
-import uk.co.emg.exception.NoCluesException;
 import uk.co.emg.service.ClueService;
 import uk.co.emg.service.FilmService;
 import uk.co.emg.service.GuessService;
@@ -29,14 +28,9 @@ public class ClueController {
         this.guessService = guessService;
     }
 
-    @GetMapping("/")
-    public ModelAndView index() throws NoCluesException {
-        return clue();
-    }
-
     @GetMapping("/clue")
-    public ModelAndView clue() throws NoCluesException {
-        Clue clue = clueService.getClue();
+    public ModelAndView clue() {
+        Clue clue = clueService.getClue(List.of());
         List<Film> options = filmService.getOptions(clue);
         return new ModelAndView("Clue")
                 .addObject("clue", clue)
@@ -45,10 +39,8 @@ public class ClueController {
 
     @PostMapping("/guess")
     public ModelAndView guess(@RequestParam("option") Long filmId, @RequestParam("clueId") Long clueId) throws IncorrectClueIdException, IncorrectFilmIdException {
-        Clue clue = clueService.getClue(clueId)
-                .orElseThrow(IncorrectClueIdException::new);
-        Film film = filmService.getFilm(filmId)
-                .orElseThrow(IncorrectFilmIdException::new);
+        Clue clue = clueService.getClue(clueId).orElseThrow(IncorrectClueIdException::new);
+        Film film = filmService.getFilm(filmId).orElseThrow(IncorrectFilmIdException::new);
         Boolean isCorrect = guessService.guess(clue, film);
         filmService.generationCheck(film);
         return new ModelAndView("Guessed")

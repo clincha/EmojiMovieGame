@@ -102,21 +102,16 @@ public class Clue {
     }
 
     @Override
-    public int hashCode() {
-        int result = film != null ? film.hashCode() : 0;
-        result = 31 * result + (clueComponents != null ? clueComponents.hashCode() : 0);
-        return result;
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Clue clue = (Clue) o;
+        return Objects.equals(id, clue.id);
+    }
 
-        if (!Objects.equals(film, clue.film)) return false;
-        return Objects.equals(clueComponents, clue.clueComponents);
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 
     @Override
