@@ -21,12 +21,20 @@
         <div class="col"></div>
         <div class="col-4">
             <#if correct>
-                <h1 class="guess-result">Correct</h1>
+                <h1 id="guess-result-correct" class="guess-result">Correct</h1>
             <#else >
-                <h1 class="guess-result">Wrong</h1>
+                <h1 id="guess-result-wrong" class="guess-result">Wrong</h1>
             </#if>
         </div>
         <div class="col"></div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-6">
+            <h2 class="section-header">Correct film</h2>
+        </div>
+        <div class="col-6">
+            <h2 class="section-header">Clue family tree</h2>
+        </div>
     </div>
     <div class="row mt-3">
         <div class="col-6 film-content-container">

@@ -15,7 +15,12 @@
 <body>
 <form method="post" action="/guess">
     <div class="container-fluid">
-        <div class="row mt-5">
+        <div class="row mt-3">
+            <div class="col-12">
+                <h1 id="clue-title">Guess which movie these emoji represent</h1>
+            </div>
+        </div>
+        <div class="row">
             <div class="col"></div>
             <div class="col centred-container">
                 <span class="badge badge-info mx-1">Generation ${clue.generation}</span>
