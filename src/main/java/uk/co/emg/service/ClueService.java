@@ -5,11 +5,8 @@ import uk.co.emg.entity.Clue;
 import uk.co.emg.entity.ClueComponent;
 import uk.co.emg.entity.Emoji;
 import uk.co.emg.entity.Film;
-import uk.co.emg.exception.NoCluesException;
-import uk.co.emg.exception.NoFilmsException;
 import uk.co.emg.repository.ClueRepository;
 
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -63,6 +60,7 @@ public class ClueService {
     }
 
     public Clue breed(Clue mother, Clue father) {
+        // TODO - Change this behaviour to set the mother and father of the clue
         Clue child = new Clue(mother.getFilm(), mother.getGeneration() + 1);
         ArrayList<ClueComponent> clueComponents = new ArrayList<>();
         clueComponents.addAll(mother.getClueComponents()

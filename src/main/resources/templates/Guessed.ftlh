@@ -27,6 +27,7 @@
         <div class="col"></div>
     </div>
     <div class="row mt-3">
+        <#-- TODO - Change this so that there is a graph showing the Clues history -->
         <div class="col"></div>
         <div class="col film-content-container">
             <img id="film-poster" class="film-content" src="https://image.tmdb.org/t/p/w342/${film.posterPath}"
