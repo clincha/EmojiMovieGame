@@ -51,10 +51,11 @@ public class ClueController {
         Boolean isCorrect = guessService.guess(clue, film, session.getId());
         filmService.generationCheck(film);
         JSONObject clueFamilyTree = clueService.createClueFamilyTree(clue);
+        System.out.println(clueFamilyTree);
         return new ModelAndView("Guessed")
                 .addObject("correct", isCorrect)
                 .addObject("film", clue.getFilm())
-                .addObject("clueFamilyTree", clueFamilyTree);
+                .addObject("clueFamilyTree", clueFamilyTree.toString());
     }
 
 }

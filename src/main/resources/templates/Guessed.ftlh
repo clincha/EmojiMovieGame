@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="css/guessed.css"/>
+    <link rel="stylesheet" href="css/Treant.css"/>
+    <link rel="stylesheet" href="css/perfect-scrollbar.css"/>
 
     <title>Movie Emoji Quiz</title>
 </head>
@@ -54,6 +56,12 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
-
+<script src="js/vendor/perfect-scrollbar.js"></script>
+<script src="js/vendor/raphael.js"></script>
+<script src="js/Treant.js"></script>
+<script>
+    var nodeStructure = ${clueFamilyTree?no_esc}
+</script>
+<script src="js/clueHistoryTree.js"></script>
 </body>
 </html>
