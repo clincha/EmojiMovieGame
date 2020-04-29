@@ -1,5 +1,6 @@
 package uk.co.emg.controller;
 
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,9 +50,11 @@ public class ClueController {
         Film film = filmService.getFilm(filmId).orElseThrow(IncorrectFilmIdException::new);
         Boolean isCorrect = guessService.guess(clue, film, session.getId());
         filmService.generationCheck(film);
+        JSONObject clueFamilyTree = clueService.createClueFamilyTree(clue);
         return new ModelAndView("Guessed")
                 .addObject("correct", isCorrect)
-                .addObject("film", clue.getFilm());
+                .addObject("film", clue.getFilm())
+                .addObject("clueFamilyTree", clueFamilyTree);
     }
 
 }

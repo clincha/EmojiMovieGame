@@ -1,5 +1,7 @@
 package uk.co.emg.service;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import uk.co.emg.entity.Clue;
 import uk.co.emg.entity.ClueComponent;
@@ -92,4 +94,57 @@ public class ClueService {
     public List<Clue> getAllClues(Film film) {
         return clueRepository.findAllByFilm(film);
     }
+
+    @SuppressWarnings("unchecked")
+    public JSONObject createClueFamilyTree(Clue clue) {
+        if (clue.getMother() == null && clue.getFather() == null) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("name", clue.getClueComponents().toString());
+            return jsonObject;
+        }
+        if (clue.getMother() == null) {
+            JSONObject text = new JSONObject();
+            text.put("name", clue.getClueComponents().toString());
+
+            JSONArray childArray = new JSONArray();
+            JSONObject nameObject = new JSONObject();
+            nameObject.put("text", createClueFamilyTree(clue.getFather()));
+            childArray.add(nameObject);
+
+            JSONObject node = new JSONObject();
+            node.put("children", childArray);
+            node.put("text", text);
+            return node;
+        }
+        if (clue.getFather() == null) {
+            JSONObject text = new JSONObject();
+            text.put("name", clue.getClueComponents().toString());
+
+            JSONArray childArray = new JSONArray();
+            JSONObject nameObject = new JSONObject();
+            nameObject.put("text", createClueFamilyTree(clue.getMother()));
+            childArray.add(nameObject);
+
+            JSONObject node = new JSONObject();
+            node.put("children", childArray);
+            node.put("text", text);
+            return node;
+        }
+        JSONObject text = new JSONObject();
+        text.put("name", clue.getClueComponents().toString());
+
+        JSONArray childArray = new JSONArray();
+        JSONObject motherNameObject = new JSONObject();
+        motherNameObject.put("text", createClueFamilyTree(clue.getMother()));
+        JSONObject fatherNameObject = new JSONObject();
+        fatherNameObject.put("text", createClueFamilyTree(clue.getFather()));
+        childArray.add(motherNameObject);
+        childArray.add(fatherNameObject);
+
+        JSONObject node = new JSONObject();
+        node.put("children", childArray);
+        node.put("text", text);
+        return node;
+    }
+
 }
