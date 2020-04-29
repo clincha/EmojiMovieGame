@@ -60,8 +60,9 @@ public class ClueService {
     }
 
     public Clue breed(Clue mother, Clue father) {
-        // TODO - Change this behaviour to set the mother and father of the clue
         Clue child = new Clue(mother.getFilm(), mother.getGeneration() + 1);
+        child.setMother(mother);
+        child.setFather(father);
         ArrayList<ClueComponent> clueComponents = new ArrayList<>();
         clueComponents.addAll(mother.getClueComponents()
                 .subList(0, mother.getClueComponents()

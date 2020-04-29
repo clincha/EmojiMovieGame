@@ -102,7 +102,6 @@ public class FilmService {
         for (int i = 1; i < 6; i++) newGenerationClues.add(clueService.breed(clues.get(0), clues.get(i)));
         newGenerationClues.add(clueService.breed(clues.get(1), clues.get(2)));
         newGenerationClues.add(clueService.breed(clues.get(2), clues.get(3)));
-        // TODO - Change this behaviour to set the parent to the previous clue
         newGenerationClues.addAll(clues.subList(0, 3).stream()
                 .map(Clue::new)
                 .peek(clueService::save)
