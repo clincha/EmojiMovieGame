@@ -98,48 +98,42 @@ public class ClueService {
     @SuppressWarnings("unchecked")
     public JSONObject createClueFamilyTree(Clue clue) {
         if (clue.getMother() == null && clue.getFather() == null) {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("name", clue.getClueComponents().toString());
-            return jsonObject;
+            JSONObject text = new JSONObject();
+            JSONObject name = new JSONObject();
+            name.put("name", clue.getClueComponents().toString());
+            text.put("text", name);
+            return text;
         }
         if (clue.getMother() == null) {
-            JSONObject text = new JSONObject();
-            text.put("name", clue.getClueComponents().toString());
+            JSONObject name = new JSONObject();
+            name.put("name", clue.getClueComponents().toString());
 
             JSONArray childArray = new JSONArray();
-            JSONObject nameObject = new JSONObject();
-            nameObject.put("text", createClueFamilyTree(clue.getFather()));
-            childArray.add(nameObject);
+            childArray.add(createClueFamilyTree(clue.getFather()));
 
             JSONObject node = new JSONObject();
             node.put("children", childArray);
-            node.put("text", text);
+            node.put("text", name);
             return node;
         }
         if (clue.getFather() == null) {
-            JSONObject text = new JSONObject();
-            text.put("name", clue.getClueComponents().toString());
+            JSONObject name = new JSONObject();
+            name.put("name", clue.getClueComponents().toString());
 
             JSONArray childArray = new JSONArray();
-            JSONObject nameObject = new JSONObject();
-            nameObject.put("text", createClueFamilyTree(clue.getMother()));
-            childArray.add(nameObject);
+            childArray.add(createClueFamilyTree(clue.getMother()));
 
             JSONObject node = new JSONObject();
             node.put("children", childArray);
-            node.put("text", text);
+            node.put("text", name);
             return node;
         }
         JSONObject text = new JSONObject();
         text.put("name", clue.getClueComponents().toString());
 
         JSONArray childArray = new JSONArray();
-        JSONObject motherNameObject = new JSONObject();
-        motherNameObject.put("text", createClueFamilyTree(clue.getMother()));
-        JSONObject fatherNameObject = new JSONObject();
-        fatherNameObject.put("text", createClueFamilyTree(clue.getFather()));
-        childArray.add(motherNameObject);
-        childArray.add(fatherNameObject);
+        childArray.add(createClueFamilyTree(clue.getMother()));
+        childArray.add(createClueFamilyTree(clue.getFather()));
 
         JSONObject node = new JSONObject();
         node.put("children", childArray);

@@ -33,7 +33,7 @@ public class Emoji {
 
     @Override
     public String toString() {
-        return getSlug() + ":" + getCharacter();
+        return character;
     }
 
     public String getSlug() {

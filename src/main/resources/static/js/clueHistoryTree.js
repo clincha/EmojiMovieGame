@@ -1,9 +1,14 @@
 simple_chart_config = {
     chart: {
-        container: "#family-tree-container"
+        container: "#family-tree-container",
+        rootOrientation: "SOUTH",
+        connectors: {
+            type: "bCurve",
+            style: {
+                "arrow-end": "diamond-wide-long"
+            }
+        }
     },
     nodeStructure: nodeStructure
 }
-new Treant(simple_chart_config, function () {
-    alert('Tree Loaded')
-}, $);
+new Treant(simple_chart_config, $);
