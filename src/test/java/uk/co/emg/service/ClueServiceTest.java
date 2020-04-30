@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.co.emg.entity.*;
 import uk.co.emg.repository.ClueRepository;
+import utils.ClueUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -105,4 +106,12 @@ public class ClueServiceTest {
         assertEquals(0.5, clueService.calculateFitness(clue), 0);
     }
 
+    @Test
+    public void createClueFamilyTree() {
+        Clue clue = ClueUtils.getClue();
+        clue.setMother(ClueUtils.getClue());
+        clue.setFather(ClueUtils.getClue());
+
+        System.out.println(clueService.createClueFamilyTree(clue));
+    }
 }

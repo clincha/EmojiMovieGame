@@ -25,6 +25,12 @@ public class Clue {
 
     private Integer generation;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Clue mother;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Clue father;
+
     public Clue() {
     }
 
@@ -38,13 +44,13 @@ public class Clue {
         this.generation = generation;
     }
 
-    @SuppressWarnings("CopyConstructorMissesField")
     public Clue(Clue clue) {
         this.film = clue.getFilm();
         this.clueComponents = clue.getClueComponents().stream()
                 .map(clueComponent -> new ClueComponent(this, clueComponent.getEmoji()))
                 .collect(Collectors.toList());
         this.generation = clue.getGeneration() + 1;
+        this.mother = clue;
     }
 
     public Clue(long id, Film film) {
@@ -99,6 +105,22 @@ public class Clue {
 
     public void setGuesses(List<Guess> guesses) {
         this.guesses = guesses;
+    }
+
+    public Clue getMother() {
+        return mother;
+    }
+
+    public void setMother(Clue mother) {
+        this.mother = mother;
+    }
+
+    public Clue getFather() {
+        return father;
+    }
+
+    public void setFather(Clue father) {
+        this.father = father;
     }
 
     @Override

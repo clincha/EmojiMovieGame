@@ -1,5 +1,18 @@
+.section-header {
+    text-align: center;
+}
+
 .guess-result {
     text-align: center;
+    font-weight: bolder;
+}
+
+#guess-result-correct {
+    color: darkgreen;
+}
+
+#guess-result-wrong {
+    color: darkred;
 }
 
 #next-clue-button-container {
