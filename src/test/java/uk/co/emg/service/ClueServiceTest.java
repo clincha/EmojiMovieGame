@@ -7,6 +7,7 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.co.emg.entity.*;
+import uk.co.emg.enumeration.MutationType;
 import uk.co.emg.repository.ClueRepository;
 import utils.ClueUtils;
 
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(JUnit4.class)
@@ -30,12 +31,14 @@ public class ClueServiceTest {
     @MockBean
     private final ClueComponentService clueComponentService = Mockito.mock(ClueComponentService.class);
     @MockBean
+    private final MutationService mutationService = Mockito.mock(MutationService.class);
+    @MockBean
     private EmojiService emojiService;
     private ClueService clueService;
 
     @Before
     public void before() {
-        clueService = new ClueService(emojiService, clueComponentService, guessService, clueRepository);
+        clueService = new ClueService(emojiService, clueComponentService, guessService, mutationService, clueRepository);
     }
 
     @Test
@@ -83,7 +86,7 @@ public class ClueServiceTest {
 
         when(clueRepository.save(any(Clue.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
         when(clueComponentService.saveAll(any())).then(invocationOnMock -> invocationOnMock.getArguments()[0]);
-
+        
         Clue child = clueService.breed(mother, father);
 
         assertEquals(child.getClueComponents().get(0), clueComponents.get(0));
@@ -112,6 +115,10 @@ public class ClueServiceTest {
         clue.setMother(ClueUtils.getClue());
         clue.setFather(ClueUtils.getClue());
 
-        System.out.println(clueService.createClueFamilyTree(clue));
+        clue.setMutation(new Mutation(clue, MutationType.RANDOM_CHANGE));
+        clue.getFather().setMutation(new Mutation(clue.getFather(), MutationType.GROUP_CHANGE));
+        clue.getMother().setMutation(new Mutation(clue.getMother(), MutationType.RANDOM_ADDITION));
+
+        assertEquals("{\"children\":[{\"text\":{\"name\":\"☺☹\",\"desc\":\"RANDOM_ADDITION\"}},{\"text\":{\"name\":\"☺☹\",\"desc\":\"GROUP_CHANGE\"}}],\"text\":{\"name\":\"☺☹\",\"desc\":\"RANDOM_CHANGE\"}}", clueService.createClueFamilyTree(clue).toString());
     }
 }

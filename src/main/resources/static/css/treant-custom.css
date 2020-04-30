@@ -1,0 +1,18 @@
+.node {
+
+}
+
+.node-name {
+    text-align: center;
+    margin: 1px;
+}
+
+.node-desc {
+    text-align: center;
+    padding: 4px;
+    margin: 1px;
+    background-color: darkorange;
+    border-radius: 4px;
+    font-size: x-small;
+    font-weight: bold;
+}

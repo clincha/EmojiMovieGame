@@ -12,24 +12,27 @@ public class Clue {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Film film;
 
-    @OneToMany(mappedBy = "clue")
+    @OneToMany(mappedBy = "clue", cascade = CascadeType.ALL)
     private List<ClueComponent> clueComponents;
 
-    @OneToMany(mappedBy = "clue")
+    @OneToMany(mappedBy = "clue", cascade = CascadeType.ALL)
     private List<Guess> guesses;
 
     private Double fitness;
 
     private Integer generation;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     private Clue mother;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     private Clue father;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Mutation mutation;
 
     public Clue() {
     }
@@ -57,6 +60,28 @@ public class Clue {
         this.id = id;
         this.film = film;
         this.generation = 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Clue clue = (Clue) o;
+        return Objects.equals(id, clue.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Clue{" +
+                "film=" + film +
+                ", guesses=" + guesses +
+                ", generation=" + generation +
+                '}';
     }
 
     public Long getId() {
@@ -123,25 +148,11 @@ public class Clue {
         this.father = father;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Clue clue = (Clue) o;
-        return Objects.equals(id, clue.id);
+    public Mutation getMutation() {
+        return mutation;
     }
 
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return "Clue{" +
-                "film=" + film +
-                ", guesses=" + guesses +
-                ", generation=" + generation +
-                '}';
+    public void setMutation(Mutation mutation) {
+        this.mutation = mutation;
     }
 }
