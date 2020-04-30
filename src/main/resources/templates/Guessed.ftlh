@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/guessed.css"/>
     <link rel="stylesheet" href="css/Treant.css"/>
     <link rel="stylesheet" href="css/perfect-scrollbar.css"/>
+    <link rel="stylesheet" href="css/treant-custom.css">
 
     <title>Movie Emoji Quiz</title>
 </head>

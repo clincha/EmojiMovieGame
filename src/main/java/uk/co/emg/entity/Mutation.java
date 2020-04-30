@@ -19,6 +19,11 @@ public class Mutation {
     public Mutation() {
     }
 
+    @Override
+    public String toString() {
+        return mutationType.name();
+    }
+
     public Mutation(Clue child, MutationType mutationType) {
         this.clue = child;
         this.mutationType = mutationType;

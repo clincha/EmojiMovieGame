@@ -74,40 +74,11 @@ public class ClueService {
         }
         Random random = new Random();
         if (random.nextInt(100) < 200) {
-            mutate(child, clueComponents);
+            mutationService.mutate(child, clueComponents);
         }
         child.setClueComponents(clueComponents);
         child = save(child);
         return child;
-    }
-
-    private void mutate(Clue child, ArrayList<ClueComponent> clueComponents) {
-        Random random = new Random();
-        MutationType mutationType = Arrays.asList(MutationType.values()).get(random.nextInt(MutationType.values().length));
-        child.setMutation(new Mutation(child, mutationType));
-        switch (mutationType) {
-            case POSITION_CHANGE:
-                Collections.shuffle(clueComponents);
-                break;
-            case GROUP_CHANGE:
-                ClueComponent groupMutationComponent = clueComponents.get(random.nextInt(clueComponents.size()));
-                String emojiGroup = groupMutationComponent.getEmoji().getEmojiGroup();
-                List<Emoji> emojiInSameGroup = emojiService.findAllByEmojiGroup(emojiGroup);
-                groupMutationComponent.setEmoji(emojiInSameGroup.get(random.nextInt(emojiInSameGroup.size())));
-                break;
-            case SUB_GROUP_CHANGE:
-                ClueComponent subGroupMutationComponent = clueComponents.get(random.nextInt(clueComponents.size()));
-                String emojiSubGroup = subGroupMutationComponent.getEmoji().getEmojiGroup();
-                List<Emoji> emojiInSameSubGroup = emojiService.findAllBySubGroup(emojiSubGroup);
-                subGroupMutationComponent.setEmoji(emojiInSameSubGroup.get(random.nextInt(emojiInSameSubGroup.size())));
-                break;
-            case RANDOM_CHANGE:
-                ClueComponent randomChangeMutationComponent = clueComponents.get(random.nextInt(clueComponents.size()));
-                randomChangeMutationComponent.setEmoji(emojiService.getRandomEmoji());
-                break;
-            case RANDOM_ADDITION:
-                clueComponents.add(new ClueComponent(child, emojiService.getRandomEmoji()));
-        }
     }
 
     public Clue save(Clue clue) {
@@ -121,47 +92,30 @@ public class ClueService {
 
     @SuppressWarnings("unchecked")
     public JSONObject createClueFamilyTree(Clue clue) {
+        JSONObject node = new JSONObject();
+        JSONArray childArray = new JSONArray();
+        JSONObject text = new JSONObject();
+        text.put("name", clue.getClueComponents().stream().map(ClueComponent::toString).collect(Collectors.joining(" ")));
+        if (clue.getMutation() != null)
+            text.put("desc", clue.getMutation().toString());
+        node.put("text", text);
+
         if (clue.getMother() == null && clue.getFather() == null) {
-            JSONObject text = new JSONObject();
-            JSONObject name = new JSONObject();
-            name.put("name", clue.getClueComponents().toString());
-            text.put("text", name);
-            return text;
+            return node;
         }
         if (clue.getMother() == null) {
-            JSONObject name = new JSONObject();
-            name.put("name", clue.getClueComponents().toString());
-
-            JSONArray childArray = new JSONArray();
             childArray.add(createClueFamilyTree(clue.getFather()));
-
-            JSONObject node = new JSONObject();
             node.put("children", childArray);
-            node.put("text", name);
             return node;
         }
         if (clue.getFather() == null) {
-            JSONObject name = new JSONObject();
-            name.put("name", clue.getClueComponents().toString());
-
-            JSONArray childArray = new JSONArray();
             childArray.add(createClueFamilyTree(clue.getMother()));
-
-            JSONObject node = new JSONObject();
             node.put("children", childArray);
-            node.put("text", name);
             return node;
         }
-        JSONObject text = new JSONObject();
-        text.put("name", clue.getClueComponents().toString());
-
-        JSONArray childArray = new JSONArray();
         childArray.add(createClueFamilyTree(clue.getMother()));
         childArray.add(createClueFamilyTree(clue.getFather()));
-
-        JSONObject node = new JSONObject();
         node.put("children", childArray);
-        node.put("text", text);
         return node;
     }
 
