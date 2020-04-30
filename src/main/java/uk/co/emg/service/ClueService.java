@@ -3,16 +3,11 @@ package uk.co.emg.service;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
-import uk.co.emg.entity.Clue;
-import uk.co.emg.entity.ClueComponent;
-import uk.co.emg.entity.Emoji;
-import uk.co.emg.entity.Film;
+import uk.co.emg.entity.*;
+import uk.co.emg.enumeration.MutationType;
 import uk.co.emg.repository.ClueRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,9 +16,11 @@ public class ClueService {
     private final ClueComponentService clueComponentService;
     private final GuessService guessService;
     private final ClueRepository clueRepository;
+    private final MutationService mutationService;
 
-    public ClueService(EmojiService emojiService, ClueComponentService clueComponentService, GuessService guessService, ClueRepository clueRepository) {
+    public ClueService(EmojiService emojiService, ClueComponentService clueComponentService, GuessService guessService, MutationService mutationService, ClueRepository clueRepository) {
         this.emojiService = emojiService;
+        this.mutationService = mutationService;
         this.clueRepository = clueRepository;
         this.clueComponentService = clueComponentService;
         this.guessService = guessService;
@@ -66,13 +63,8 @@ public class ClueService {
         child.setMother(mother);
         child.setFather(father);
         ArrayList<ClueComponent> clueComponents = new ArrayList<>();
-        clueComponents.addAll(mother.getClueComponents()
-                .subList(0, mother.getClueComponents()
-                        .size() / 2));
-        clueComponents.addAll(father.getClueComponents()
-                .subList(father.getClueComponents()
-                        .size() / 2, father.getClueComponents()
-                        .size()));
+        clueComponents.addAll(mother.getClueComponents().subList(0, mother.getClueComponents().size() / 2));
+        clueComponents.addAll(father.getClueComponents().subList(father.getClueComponents().size() / 2, father.getClueComponents().size()));
         if (clueComponents.size() == 0) {
             clueComponents.addAll(mother.getClueComponents());
             clueComponents.addAll(father.getClueComponents());
@@ -80,14 +72,46 @@ public class ClueService {
         for (int i = 0; i < clueComponents.size(); i++) {
             clueComponents.set(i, new ClueComponent(child, clueComponents.get(i).getEmoji()));
         }
+        Random random = new Random();
+        if (random.nextInt(100) < 200) {
+            mutate(child, clueComponents);
+        }
         child.setClueComponents(clueComponents);
         child = save(child);
         return child;
     }
 
+    private void mutate(Clue child, ArrayList<ClueComponent> clueComponents) {
+        Random random = new Random();
+        MutationType mutationType = Arrays.asList(MutationType.values()).get(random.nextInt(MutationType.values().length));
+        child.setMutation(new Mutation(child, mutationType));
+        switch (mutationType) {
+            case POSITION_CHANGE:
+                Collections.shuffle(clueComponents);
+                break;
+            case GROUP_CHANGE:
+                ClueComponent groupMutationComponent = clueComponents.get(random.nextInt(clueComponents.size()));
+                String emojiGroup = groupMutationComponent.getEmoji().getEmojiGroup();
+                List<Emoji> emojiInSameGroup = emojiService.findAllByEmojiGroup(emojiGroup);
+                groupMutationComponent.setEmoji(emojiInSameGroup.get(random.nextInt(emojiInSameGroup.size())));
+                break;
+            case SUB_GROUP_CHANGE:
+                ClueComponent subGroupMutationComponent = clueComponents.get(random.nextInt(clueComponents.size()));
+                String emojiSubGroup = subGroupMutationComponent.getEmoji().getEmojiGroup();
+                List<Emoji> emojiInSameSubGroup = emojiService.findAllBySubGroup(emojiSubGroup);
+                subGroupMutationComponent.setEmoji(emojiInSameSubGroup.get(random.nextInt(emojiInSameSubGroup.size())));
+                break;
+            case RANDOM_CHANGE:
+                ClueComponent randomChangeMutationComponent = clueComponents.get(random.nextInt(clueComponents.size()));
+                randomChangeMutationComponent.setEmoji(emojiService.getRandomEmoji());
+                break;
+            case RANDOM_ADDITION:
+                clueComponents.add(new ClueComponent(child, emojiService.getRandomEmoji()));
+        }
+    }
+
     public Clue save(Clue clue) {
         clue = clueRepository.save(clue);
-        clue.setClueComponents(clueComponentService.saveAll(clue.getClueComponents()));
         return clue;
     }
 

@@ -8,7 +8,6 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.co.emg.entity.*;
 import uk.co.emg.repository.ClueRepository;
-import utils.ClueUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,10 +31,11 @@ public class ClueServiceTest {
     @MockBean
     private EmojiService emojiService;
     private ClueService clueService;
+    private MutationService mutationService;
 
     @Before
     public void before() {
-        clueService = new ClueService(emojiService, clueComponentService, guessService, clueRepository);
+        clueService = new ClueService(emojiService, clueComponentService, guessService, mutationService, clueRepository);
     }
 
     @Test
@@ -84,6 +84,7 @@ public class ClueServiceTest {
         when(clueRepository.save(any(Clue.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
         when(clueComponentService.saveAll(any())).then(invocationOnMock -> invocationOnMock.getArguments()[0]);
 
+
         Clue child = clueService.breed(mother, father);
 
         assertEquals(child.getClueComponents().get(0), clueComponents.get(0));
@@ -104,14 +105,5 @@ public class ClueServiceTest {
         when(clueRepository.save(clue)).thenReturn(clue);
 
         assertEquals(0.5, clueService.calculateFitness(clue), 0);
-    }
-
-    @Test
-    public void createClueFamilyTree() {
-        Clue clue = ClueUtils.getClue();
-        clue.setMother(ClueUtils.getClue());
-        clue.setFather(ClueUtils.getClue());
-
-        System.out.println(clueService.createClueFamilyTree(clue));
     }
 }

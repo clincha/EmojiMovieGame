@@ -84,4 +84,17 @@ public class EmojiService {
         return emojis;
     }
 
+    public List<Emoji> findAllByEmojiGroup(String emojiGroup) {
+        return emojiRepository.findAllByEmojiGroup(emojiGroup);
+    }
+
+    public List<Emoji> findAllBySubGroup(String emojiSubGroup) {
+        return emojiRepository.findAllBySubGroup(emojiSubGroup);
+    }
+
+    public Emoji getRandomEmoji() {
+        List<Emoji> emojis = (List<Emoji>) emojiRepository.findAll();
+        Collections.shuffle(emojis);
+        return emojis.get(0);
+    }
 }
