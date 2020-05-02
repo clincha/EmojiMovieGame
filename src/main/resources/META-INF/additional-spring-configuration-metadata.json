@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "api.tmdb",
+      "type": "java.lang.String",
+      "description": "An API key from The Movie Database. Can be found at https://www.themoviedb.org/documentation/api."
+    },
+    {
+      "name": "api.emoji",
+      "type": "java.lang.String",
+      "description": "An access key from the Open Emoji API. Can be found at https://emoji-api.com/."
+    }
+  ] }

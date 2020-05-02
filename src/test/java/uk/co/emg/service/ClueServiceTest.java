@@ -119,6 +119,6 @@ public class ClueServiceTest {
         clue.getFather().setMutation(new Mutation(clue.getFather(), MutationType.GROUP_CHANGE));
         clue.getMother().setMutation(new Mutation(clue.getMother(), MutationType.RANDOM_ADDITION));
 
-        assertEquals("{\"children\":[{\"text\":{\"name\":\"☺☹\",\"desc\":\"RANDOM_ADDITION\"}},{\"text\":{\"name\":\"☺☹\",\"desc\":\"GROUP_CHANGE\"}}],\"text\":{\"name\":\"☺☹\",\"desc\":\"RANDOM_CHANGE\"}}", clueService.createClueFamilyTree(clue).toString());
+        assertEquals("{\"children\":[{\"text\":{\"name\":\"☺ ☹\",\"desc\":\"RANDOM_ADDITION\"}},{\"text\":{\"name\":\"☺ ☹\",\"desc\":\"GROUP_CHANGE\"}}],\"text\":{\"name\":\"☺ ☹\",\"desc\":\"RANDOM_CHANGE\"}}", clueService.createClueFamilyTree(clue).toString());
     }
 }

@@ -4,6 +4,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.co.emg.builder.EmojiBuilder;
 import uk.co.emg.entity.Emoji;
@@ -17,8 +18,9 @@ import java.util.List;
 @Service
 public class EmojiService {
 
-    public static final String ACCESS_KEY = "access_key=d41710af6f06cd316334a2a8e337b984bddbb23f";
     private static final String EMOJI_API_URL = "https://emoji-api.com";
+    @Value("${api.emoji}")
+    public String ACCESS_KEY;
     private final ApiService apiService;
     private final EmojiRepository emojiRepository;
 
@@ -35,7 +37,7 @@ public class EmojiService {
      */
     public void preLoad() throws Exception {
         if (emojiRepository.count() == 0) {
-            String rawJSON = apiService.makeApiRequest(EMOJI_API_URL + "/emojis?" + ACCESS_KEY);
+            String rawJSON = apiService.makeApiRequest(EMOJI_API_URL + "/emojis?access_key=" + ACCESS_KEY);
             List<Emoji> emojis = parseOpenEmojiResponse(rawJSON);
             emojiRepository.saveAll(emojis);
         }
@@ -58,26 +60,17 @@ public class EmojiService {
 
     private List<Emoji> parseOpenEmojiResponse(String rawJSON) throws ParseException {
         JSONParser parser = new JSONParser();
-
         JSONArray allEmojiData = (JSONArray) parser.parse(rawJSON);
-
         ArrayList<Emoji> emojis = new ArrayList<>(allEmojiData.size());
-
         for (Object emojiJSONObject : allEmojiData) {
             JSONObject emojiJSON = (JSONObject) emojiJSONObject;
             Emoji emoji = new EmojiBuilder()
-                    .setSlug(emojiJSON.get("slug")
-                            .toString())
-                    .setCharacter(emojiJSON.get("character")
-                            .toString())
-                    .setUnicodeName(emojiJSON.get("unicodeName")
-                            .toString())
-                    .setCodePoint(emojiJSON.get("codePoint")
-                            .toString())
-                    .setGroup(emojiJSON.get("group")
-                            .toString())
-                    .setSubGroup(emojiJSON.get("subGroup")
-                            .toString())
+                    .setSlug(emojiJSON.get("slug").toString())
+                    .setCharacter(emojiJSON.get("character").toString())
+                    .setUnicodeName(emojiJSON.get("unicodeName").toString())
+                    .setCodePoint(emojiJSON.get("codePoint").toString())
+                    .setGroup(emojiJSON.get("group").toString())
+                    .setSubGroup(emojiJSON.get("subGroup").toString())
                     .build();
             emojis.add(emoji);
         }

@@ -3,11 +3,16 @@ package uk.co.emg.service;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
-import uk.co.emg.entity.*;
-import uk.co.emg.enumeration.MutationType;
+import uk.co.emg.entity.Clue;
+import uk.co.emg.entity.ClueComponent;
+import uk.co.emg.entity.Emoji;
+import uk.co.emg.entity.Film;
 import uk.co.emg.repository.ClueRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service

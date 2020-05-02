@@ -4,6 +4,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.co.emg.builder.FilmBuilder;
 import uk.co.emg.entity.Clue;
@@ -15,8 +16,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
-    public static final String BASE_URL = "https://api.themoviedb.org/3/";
-    public static final String API_KEY = "api_key=00fa70c9a0a3d46a9d2d76f0a9c395ea";
+    public String BASE_URL = "https://api.themoviedb.org/3/";
+    @Value("${api.tmdb}")
+    public String API_KEY;
     public static final int INITIAL_CLUE_GENERATION_SIZE = 10;
     public static final int GENERATION_GUESS_THRESHOLD = 5;
     public static final int FILM_GENERATION_SIZE = 3;
@@ -33,7 +35,7 @@ public class FilmService {
 
     public void preLoad() throws ParseException {
         if (filmRepository.count() == 0) {
-            String rawJSON = apiService.makeApiRequest(BASE_URL + "discover/movie/?language=en-UK&sort_by=popularity.desc&" + API_KEY);
+            String rawJSON = apiService.makeApiRequest(BASE_URL + "discover/movie/?language=en-UK&sort_by=popularity.desc&api_key=" + API_KEY);
             JSONParser parser = new JSONParser();
             JSONObject response = (JSONObject) parser.parse(rawJSON);
             JSONArray results = (JSONArray) response.get("results");
