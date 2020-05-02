@@ -29,30 +29,28 @@
             <div class="col"></div>
         </div>
         <div class="row mt-5">
-            <div class="col"></div>
-            <div class="col">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
                 <h1 id="clue">
                     <#list clue.clueComponents as clueComponent>
                         <#if clueComponent.emoji?has_content>
                             ${clueComponent.emoji.character}
-                        <#else>
-                            X
                         </#if>
                     </#list>
                 </h1>
             </div>
-            <div class="col"></div>
+            <div class="col-md-3"></div>
         </div>
         <div class="row mt-5">
-            <div class="col-3"></div>
+            <div class="col-md-3"></div>
             <#list options as option>
-                <div class="col centred-container">
+                <div class="col-md-2 centred-container">
                     <button <#if option?index = 1>autofocus</#if> name="option" type="submit"
-                            class="movie-option-button btn btn-primary"
+                            class="movie-option-button btn btn-primary btn-block"
                             value="${option.id?c}">${option.title}</button>
                 </div>
             </#list>
-            <div class="col-3"></div>
+            <div class="col-md-3"></div>
         </div>
     </div>
     <input name="clueId" type="hidden" value="${clue.id?c}">

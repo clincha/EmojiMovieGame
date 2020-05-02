@@ -19,38 +19,34 @@
 
 <div class="container-fluid">
     <div class="row mt-3">
-        <div class="col"></div>
-        <div class="col-4">
+        <div class="col">
             <#if correct>
                 <h1 id="guess-result-correct" class="guess-result">Correct</h1>
             <#else >
                 <h1 id="guess-result-wrong" class="guess-result">Wrong</h1>
             </#if>
         </div>
-        <div class="col"></div>
     </div>
     <div class="row mt-3">
-        <div class="col-6">
+        <div class="col-md-4"></div>
+        <div id="next-clue-button-container" class="col-md-4">
+            <button autofocus class="btn btn-primary btn-block" onclick="location.href='/clue'">Next Clue</button>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-6">
             <h2 class="section-header">Correct film</h2>
+            <div class="film-content-container">
+                <img id="film-poster" class="film-content" src="https://image.tmdb.org/t/p/w342/${film.posterPath}"
+                     alt="${film.title} poster"/>
+                <p id="film-overview" class="film-content">${film.overview}</p>
+            </div>
         </div>
-        <div class="col-6">
+        <div class="col-md-6">
             <h2 class="section-header">Clue family tree</h2>
+            <div id="family-tree-container"></div>
         </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-6 film-content-container">
-            <img id="film-poster" class="film-content" src="https://image.tmdb.org/t/p/w342/${film.posterPath}"
-                 alt="${film.title} poster"/>
-            <p id="film-overview" class="film-content">${film.overview}</p>
-        </div>
-        <div id="family-tree-container" class="col-6"></div>
-    </div>
-    <div class="row mt-3">
-        <div class="col"></div>
-        <div id="next-clue-button-container" class="col-4">
-            <button autofocus class="btn btn-primary" onclick="location.href='/clue'">Next Clue</button>
-        </div>
-        <div class="col"></div>
     </div>
 </div>
 
