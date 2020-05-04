@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(JUnit4.class)
@@ -86,7 +86,7 @@ public class ClueServiceTest {
 
         when(clueRepository.save(any(Clue.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
         when(clueComponentService.saveAll(any())).then(invocationOnMock -> invocationOnMock.getArguments()[0]);
-        
+
         Clue child = clueService.breed(mother, father);
 
         assertEquals(child.getClueComponents().get(0), clueComponents.get(0));
@@ -119,6 +119,7 @@ public class ClueServiceTest {
         clue.getFather().setMutation(new Mutation(clue.getFather(), MutationType.GROUP_CHANGE));
         clue.getMother().setMutation(new Mutation(clue.getMother(), MutationType.RANDOM_ADDITION));
 
-        assertEquals("{\"children\":[{\"text\":{\"name\":\"☺ ☹\",\"desc\":\"RANDOM_ADDITION\"}},{\"text\":{\"name\":\"☺ ☹\",\"desc\":\"GROUP_CHANGE\"}}],\"text\":{\"name\":\"☺ ☹\",\"desc\":\"RANDOM_CHANGE\"}}", clueService.createClueFamilyTree(clue).toString());
+        assertEquals("{\"children\":[{\"text\":{\"name\":\"☺ ☹\",\"desc\":\"RANDOM_ADDITION\"}},{\"text\":{\"name\":\"☺ ☹\",\"desc\":\"GROUP_CHANGE\"}}],\"text\":{\"name\":\"☺ ☹\",\"desc\":\"RANDOM_CHANGE\"}}",
+                clueService.createClueFamilyTree(clue).toString());
     }
 }
