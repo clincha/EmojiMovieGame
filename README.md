@@ -4,9 +4,10 @@ A genetic algorithm to find the best Emoji representation of a movie.
 ## Running it
 1. Clone the repository
 2. Ensure there are valid API keys for `api.tmdb` and `api.emoji` in the file `src/main/resources/api.properties`
-3. Run `mvn install` in the repository directory
-4. Run `java -jar target/emg-0.0.1.jar`
-5. Go to a browser and go to `localhost:8080/clue`
+3. Replace `/home/aclinch/Documents/Code/EMG/Database` in `application.properties` with an **absolute path** to a writeable directory. The application will create a file acting as a database in this location.
+4. Run `mvn install` in the repository directory
+5. Run `java -jar target/emg-0.0.1.jar`
+6. Go to a browser and go to `localhost:8080/clue`
 
 ## Assignment
 
