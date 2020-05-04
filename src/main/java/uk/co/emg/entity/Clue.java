@@ -12,7 +12,7 @@ public class Clue {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Film film;
 
     @OneToMany(mappedBy = "clue", cascade = CascadeType.ALL)

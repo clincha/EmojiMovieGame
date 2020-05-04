@@ -38,7 +38,7 @@
         <div class="col-md-6">
             <h2 class="section-header">Correct film</h2>
             <div class="film-content-container">
-                <img id="film-poster" class="film-content" src="https://image.tmdb.org/t/p/w342/${film.posterPath}"
+                <img id="film-poster" class="film-content" src="https://image.tmdb.org/t/p/w342${film.posterPath}"
                      alt="${film.title} poster"/>
                 <p id="film-overview" class="film-content">${film.overview}</p>
             </div>

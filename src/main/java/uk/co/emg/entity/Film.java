@@ -17,7 +17,7 @@ public class Film {
     @Column(length = 100000)
     String overview;
 
-    @OneToMany(mappedBy = "film")
+    @OneToMany(mappedBy = "film",cascade = CascadeType.ALL)
     List<Clue> clues;
 
     Integer generation;

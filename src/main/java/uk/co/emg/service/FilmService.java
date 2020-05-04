@@ -16,16 +16,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
-    public String BASE_URL = "https://api.themoviedb.org/3/";
-    @Value("${api.tmdb}")
-    public String API_KEY;
     public static final int INITIAL_CLUE_GENERATION_SIZE = 10;
-    public static final int GENERATION_GUESS_THRESHOLD = 5;
-    public static final int FILM_GENERATION_SIZE = 3;
-
+    public static final int GENERATION_GUESS_THRESHOLD = 10;
+    public static final int FILM_GENERATION_SIZE = 20;
     private final ApiService apiService;
     private final ClueService clueService;
     private final FilmRepository filmRepository;
+    public String BASE_URL = "https://api.themoviedb.org/3/";
+    @Value("${api.tmdb}")
+    public String API_KEY;
 
     public FilmService(ApiService apiService, FilmRepository filmRepository, ClueService clueService) {
         this.apiService = apiService;
@@ -35,14 +34,14 @@ public class FilmService {
 
     public void preLoad() throws ParseException {
         if (filmRepository.count() == 0) {
-            String rawJSON = apiService.makeApiRequest(BASE_URL + "discover/movie/?language=en-UK&sort_by=popularity.desc&api_key=" + API_KEY);
+            String rawJSON = apiService.makeApiRequest(BASE_URL + "discover/movie/?language=en&sort_by=popularity.desc&api_key=" + API_KEY);
             JSONParser parser = new JSONParser();
             JSONObject response = (JSONObject) parser.parse(rawJSON);
             JSONArray results = (JSONArray) response.get("results");
 
             ArrayList<Film> films = new ArrayList<>(results.size());
 
-            for (int i = 0; i < FILM_GENERATION_SIZE; i++) {
+            for (int i = 0; i < Math.min(FILM_GENERATION_SIZE, results.size()); i++) {
                 JSONObject result = (JSONObject) results.get(i);
                 films.add(new FilmBuilder()
                         .setId((Long) (result).get("id"))
@@ -77,7 +76,7 @@ public class FilmService {
     public List<Film> getRandomFilmsExcludingFilm(Film film) {
         ArrayList<Film> films = getPopularFilms();
         films.remove(film);
-        return films;
+        return films.subList(0, 2);
     }
 
     public Optional<Film> getFilm(Long id) {

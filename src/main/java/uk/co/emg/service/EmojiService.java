@@ -44,7 +44,7 @@ public class EmojiService {
     }
 
     public List<Emoji> getEmojiBasedOnFilm(Film film) {
-        ArrayList<Emoji> emojis = new ArrayList<>();
+        List<Emoji> emojis = new ArrayList<>();
         for (String filmTitleWord : film.getTitle()
                 .split(" ")) {
             ArrayList<Emoji> searchResults = emojiRepository.findEmojiBySlugContains(filmTitleWord);
@@ -55,6 +55,8 @@ public class EmojiService {
             Collections.shuffle(searchResults);
             emojis.add(searchResults.get(0));
         }
+        emojis = emojis.subList(0, Math.min(emojis.size(), 4));
+        Collections.shuffle(emojis);
         return emojis;
     }
 

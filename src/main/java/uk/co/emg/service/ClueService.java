@@ -78,7 +78,7 @@ public class ClueService {
             clueComponents.set(i, new ClueComponent(child, clueComponents.get(i).getEmoji()));
         }
         Random random = new Random();
-        if (random.nextInt(100) < 200) {
+        if (random.nextInt(100) < 2) {
             mutationService.mutate(child, clueComponents);
         }
         child.setClueComponents(clueComponents);
