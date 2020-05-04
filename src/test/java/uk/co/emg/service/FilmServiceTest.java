@@ -8,12 +8,10 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.co.emg.entity.Clue;
 import uk.co.emg.entity.Film;
-import uk.co.emg.entity.Guess;
 import uk.co.emg.repository.FilmRepository;
 import uk.co.emg.utils.FilmUtils;
-import utils.ClueUtils;
+import uk.co.emg.utils.ClueUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;

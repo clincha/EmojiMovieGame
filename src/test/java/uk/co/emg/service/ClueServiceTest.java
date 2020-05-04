@@ -9,7 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.co.emg.entity.*;
 import uk.co.emg.enumeration.MutationType;
 import uk.co.emg.repository.ClueRepository;
-import utils.ClueUtils;
+import uk.co.emg.utils.ClueUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package utils;
+package uk.co.emg.utils;
 
 import uk.co.emg.entity.*;
 import uk.co.emg.service.FilmService;
