@@ -12,7 +12,7 @@ import java.util.*;
 @Service
 public class MutationService {
 
-    private EmojiService emojiService;
+    private final EmojiService emojiService;
 
     public MutationService(EmojiService emojiService) {
         this.emojiService = emojiService;
