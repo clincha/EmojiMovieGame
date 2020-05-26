@@ -37,4 +37,13 @@ public class LoaderTest {
         }
     }
 
+    @Test
+    public void ensureThereIsOnlyOneGenerationAfterPreload() {
+        ArrayList<Film> films = (ArrayList<Film>) filmRepository.findAll();
+        Integer generation = films.get(0).getGeneration();
+        for (Film film : films) {
+            assertEquals(film.getGeneration(), generation);
+        }
+    }
+
 }
