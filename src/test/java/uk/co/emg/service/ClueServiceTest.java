@@ -10,14 +10,17 @@ import uk.co.emg.entity.*;
 import uk.co.emg.enumeration.MutationType;
 import uk.co.emg.repository.ClueRepository;
 import uk.co.emg.utils.ClueUtils;
+import uk.co.emg.utils.FilmUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -121,5 +124,30 @@ public class ClueServiceTest {
 
         assertEquals("{\"children\":[{\"text\":{\"name\":\"☺ ☹\",\"desc\":\"RANDOM_ADDITION\"}},{\"text\":{\"name\":\"☺ ☹\",\"desc\":\"GROUP_CHANGE\"}}],\"text\":{\"name\":\"☺ ☹\",\"desc\":\"RANDOM_CHANGE\"}}",
                 clueService.createClueFamilyTree(clue).toString());
+    }
+
+    @Test
+    public void getClueTest(){
+        var allClues = new ArrayList<Clue>(3);
+
+        var clue0 = new Clue(0, FilmUtils.getFilm());
+        var clue1 = new Clue(1, FilmUtils.getFilm());
+        var clue2 = new Clue(2, FilmUtils.getFilm());
+
+        allClues.add(clue0);
+        allClues.add(clue1);
+        allClues.add(clue2);
+
+        when(clueRepository.findAllByFitnessIsNull()).thenReturn(allClues);
+
+        var alreadySeenClues = new ArrayList<Clue>(2);
+
+        alreadySeenClues.add(clue0);
+        alreadySeenClues.add(clue1);
+
+        Clue returnedClue = clueService.getClue(alreadySeenClues);
+
+        assertNotNull(returnedClue);
+        assertEquals(returnedClue, clue2);
     }
 }
