@@ -53,13 +53,17 @@ public class ClueService {
 
     public Clue getClue(HttpSession session) {
         Random random = new Random();
+
         List<Clue> alreadySeenClues = guessService.getGuesses(session).stream()
                 .map(Guess::getClue)
                 .collect(Collectors.toList());
+
         List<Clue> currentGenerationClues = clueRepository.findAllByFitnessIsNull();
+
         List<Clue> cluesNotYetSeen = currentGenerationClues.stream()
                 .filter(clue -> !alreadySeenClues.contains(clue))
                 .collect(Collectors.toList());
+
         if (cluesNotYetSeen.isEmpty()) {
             return currentGenerationClues.get(random.nextInt(currentGenerationClues.size()));
         }

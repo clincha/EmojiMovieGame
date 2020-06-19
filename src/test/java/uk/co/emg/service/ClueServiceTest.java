@@ -19,14 +19,11 @@ import uk.co.emg.utils.FilmUtils;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -103,7 +100,7 @@ public class ClueServiceTest {
     }
 
     @Test
-    public void getClueTest() {
+    public void getClueTest_UnseenClueAvailable() {
         var allClues = new ArrayList<Clue>(3);
         var previousGuesses = new ArrayList<Guess>(2);
 
@@ -124,33 +121,24 @@ public class ClueServiceTest {
     }
 
     @Test
-    public void newGetClueTest() {
-        ArrayList<Film> films = new ArrayList<>(3);
-        for (int i = 0; i < 3; i++) {
-            Film film = new Film(i, "Test " + i + " Title", "Test " + i + " Poster Path", "Test " + i + " Overview");
-            ArrayList<Clue> clues = new ArrayList<>(3);
-            for (int j = 0; j < 3; j++) {
-                Clue clue = new Clue(i * 3 + j, film);
-                clues.add(clue);
-            }
-            film.setClues(clues);
-            films.add(film);
-        }
+    public void getClueTest_UnseenClueUnavailable() {
+        var allClues = new ArrayList<Clue>(3);
+        var previousGuesses = new ArrayList<Guess>(2);
 
-        when(clueRepository.findAllByFitnessIsNull()).thenReturn(films.stream()
-                .map(Film::getClues)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList())
-        );
+        allClues.add(new Clue(0, FilmUtils.getFilm()));
+        allClues.add(new Clue(1, FilmUtils.getFilm()));
+        allClues.add(new Clue(2, FilmUtils.getFilm()));
 
-        ArrayList<Clue> usedClues = new ArrayList<>(9);
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                Optional<Clue> clue = clueService.getClue(99L);
-                assertNotNull(clue.orElse(null));
-                assertFalse(usedClues.contains(clue.get()));
-                usedClues.add(films.get(j).getClues().get(i));
-            }
-        }
+        previousGuesses.add(new Guess(allClues.get(0), allClues.get(0).getFilm(), "99"));
+        previousGuesses.add(new Guess(allClues.get(1), allClues.get(1).getFilm(), "99"));
+        previousGuesses.add(new Guess(allClues.get(2), allClues.get(2).getFilm(), "99"));
+
+        when(clueRepository.findAllByFitnessIsNull()).thenReturn(allClues);
+        when(guessService.getGuesses(Mockito.any(HttpSession.class))).thenReturn(previousGuesses);
+
+        var returnedClue = clueService.getClue(Mockito.mock(HttpSession.class));
+
+        assertNotNull(returnedClue);
+        assertTrue(allClues.contains(returnedClue));
     }
 }
