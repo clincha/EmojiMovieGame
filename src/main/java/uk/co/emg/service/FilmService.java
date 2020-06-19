@@ -11,7 +11,11 @@ import uk.co.emg.entity.Clue;
 import uk.co.emg.entity.Film;
 import uk.co.emg.repository.FilmRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,23 +64,17 @@ public class FilmService {
     }
 
     public List<Film> getOptions(Clue clue) {
-        List<Film> films = getRandomFilmsExcludingFilm(clue.getFilm());
-        films.add(clue.getFilm());
+        ArrayList<Film> films =
+                getPopularFilms();
+        films.remove(clue.getFilm());
         Collections.shuffle(films);
-        return films;
+        return films.subList(0, 2);
     }
 
     public ArrayList<Film> getPopularFilms() {
         ArrayList<Film> popularFilms = new ArrayList<>();
-        filmRepository.findAll()
-                .forEach(popularFilms::add);
+        filmRepository.findAll().forEach(popularFilms::add);
         return popularFilms;
-    }
-
-    public List<Film> getRandomFilmsExcludingFilm(Film film) {
-        ArrayList<Film> films = getPopularFilms();
-        films.remove(film);
-        return films.subList(0, 2);
     }
 
     public Optional<Film> getFilm(Long id) {

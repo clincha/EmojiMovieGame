@@ -9,12 +9,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.co.emg.entity.Clue;
 import uk.co.emg.entity.Film;
 import uk.co.emg.repository.FilmRepository;
-import uk.co.emg.utils.FilmUtils;
 import uk.co.emg.utils.ClueUtils;
+import uk.co.emg.utils.FilmUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -69,5 +72,22 @@ public class FilmServiceTest {
         List<Clue> newGeneration = filmService.createNewGeneration(film);
 
         assertEquals(10, newGeneration.size());
+    }
+
+    @Test
+    public void getOptions() {
+        FilmService filmServiceSpy = Mockito.spy(filmService);
+        var clue = ClueUtils.getClue();
+        var popularFilms = new ArrayList<Film>(3);
+        popularFilms.add(clue.getFilm());
+        popularFilms.add(new Film(2, "test", "test", "test"));
+        popularFilms.add(new Film(3, "test", "test", "test"));
+
+        when(filmServiceSpy.getPopularFilms()).thenReturn(popularFilms);
+
+        var options = filmServiceSpy.getOptions(clue);
+
+        assertFalse(options.contains(clue.getFilm()));
+        assertEquals(2, options.size());
     }
 }
