@@ -7,9 +7,11 @@ import uk.co.emg.entity.Clue;
 import uk.co.emg.entity.ClueComponent;
 import uk.co.emg.entity.Emoji;
 import uk.co.emg.entity.Film;
+import uk.co.emg.entity.Guess;
 import uk.co.emg.enumeration.MutationType;
 import uk.co.emg.repository.ClueRepository;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,8 +51,11 @@ public class ClueService {
         return clueRepository.findById(clueId);
     }
 
-    public Clue getClue(List<Clue> alreadySeenClues) {
+    public Clue getClue(HttpSession session) {
         Random random = new Random();
+        List<Clue> alreadySeenClues = guessService.getGuesses(session).stream()
+                .map(Guess::getClue)
+                .collect(Collectors.toList());
         List<Clue> currentGenerationClues = clueRepository.findAllByFitnessIsNull();
         List<Clue> cluesNotYetSeen = currentGenerationClues.stream()
                 .filter(clue -> !alreadySeenClues.contains(clue))

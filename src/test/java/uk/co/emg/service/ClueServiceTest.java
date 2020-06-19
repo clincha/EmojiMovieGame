@@ -6,22 +6,27 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import uk.co.emg.entity.*;
+import uk.co.emg.entity.Clue;
+import uk.co.emg.entity.ClueComponent;
+import uk.co.emg.entity.Emoji;
+import uk.co.emg.entity.Film;
+import uk.co.emg.entity.Guess;
+import uk.co.emg.entity.Mutation;
 import uk.co.emg.enumeration.MutationType;
 import uk.co.emg.repository.ClueRepository;
 import uk.co.emg.utils.ClueUtils;
 import uk.co.emg.utils.FilmUtils;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -43,36 +48,6 @@ public class ClueServiceTest {
     @Before
     public void before() {
         clueService = new ClueService(emojiService, clueComponentService, guessService, mutationService, clueRepository);
-    }
-
-    @Test
-    public void newGetClueTest() {
-        ArrayList<Film> films = new ArrayList<>(3);
-        for (int i = 0; i < 3; i++) {
-            Film film = new Film(i, "Test " + i + " Title", "Test " + i + " Poster Path", "Test " + i + " Overview");
-            ArrayList<Clue> clues = new ArrayList<>(3);
-            for (int j = 0; j < 3; j++) {
-                Clue clue = new Clue(i * 3 + j, film);
-                clues.add(clue);
-            }
-            film.setClues(clues);
-            films.add(film);
-        }
-
-        when(clueRepository.findAllByFitnessIsNull()).thenReturn(films.stream()
-                .map(Film::getClues)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList())
-        );
-
-        ArrayList<Clue> usedClues = new ArrayList<>(9);
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                Clue clue = clueService.getClue(usedClues);
-                assertFalse(usedClues.contains(clue));
-                usedClues.add(films.get(j).getClues().get(i));
-            }
-        }
     }
 
     @Test
@@ -128,31 +103,54 @@ public class ClueServiceTest {
     }
 
     @Test
-    public void getClueTest(){
+    public void getClueTest() {
         var allClues = new ArrayList<Clue>(3);
+        var previousGuesses = new ArrayList<Guess>(2);
 
-        var clue0 = new Clue(0, FilmUtils.getFilm());
-        var clue1 = new Clue(1, FilmUtils.getFilm());
-        var clue2 = new Clue(2, FilmUtils.getFilm());
+        allClues.add(new Clue(0, FilmUtils.getFilm()));
+        allClues.add(new Clue(1, FilmUtils.getFilm()));
+        allClues.add(new Clue(2, FilmUtils.getFilm()));
 
-        allClues.add(clue0);
-        allClues.add(clue1);
-        allClues.add(clue2);
+        previousGuesses.add(new Guess(allClues.get(0), allClues.get(0).getFilm(), "99"));
+        previousGuesses.add(new Guess(allClues.get(1), allClues.get(1).getFilm(), "99"));
 
         when(clueRepository.findAllByFitnessIsNull()).thenReturn(allClues);
+        when(guessService.getGuesses(Mockito.any(HttpSession.class))).thenReturn(previousGuesses);
 
-        Clue returnedClue = clueService.getClue(allClues);
-
-        assertTrue(allClues.contains(returnedClue));
-
-        var alreadySeenClues = new ArrayList<Clue>(2);
-
-        alreadySeenClues.add(clue0);
-        alreadySeenClues.add(clue1);
-
-        returnedClue = clueService.getClue(alreadySeenClues);
+        var returnedClue = clueService.getClue(Mockito.mock(HttpSession.class));
 
         assertNotNull(returnedClue);
-        assertEquals(returnedClue, clue2);
+        assertEquals(returnedClue, allClues.get(2));
+    }
+
+    @Test
+    public void newGetClueTest() {
+        ArrayList<Film> films = new ArrayList<>(3);
+        for (int i = 0; i < 3; i++) {
+            Film film = new Film(i, "Test " + i + " Title", "Test " + i + " Poster Path", "Test " + i + " Overview");
+            ArrayList<Clue> clues = new ArrayList<>(3);
+            for (int j = 0; j < 3; j++) {
+                Clue clue = new Clue(i * 3 + j, film);
+                clues.add(clue);
+            }
+            film.setClues(clues);
+            films.add(film);
+        }
+
+        when(clueRepository.findAllByFitnessIsNull()).thenReturn(films.stream()
+                .map(Film::getClues)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList())
+        );
+
+        ArrayList<Clue> usedClues = new ArrayList<>(9);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                Optional<Clue> clue = clueService.getClue(99L);
+                assertNotNull(clue.orElse(null));
+                assertFalse(usedClues.contains(clue.get()));
+                usedClues.add(films.get(j).getClues().get(i));
+            }
+        }
     }
 }

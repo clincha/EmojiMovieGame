@@ -34,10 +34,7 @@ public class ClueController {
 
     @GetMapping("/clue")
     public ModelAndView clue(HttpSession session) {
-        Clue clue = clueService.getClue(guessService.getGuesses(session).stream()
-                .map(Guess::getClue)
-                .collect(Collectors.toList())
-        );
+        Clue clue = clueService.getClue(session);
         List<Film> options = filmService.getOptions(clue);
         return new ModelAndView("Clue")
                 .addObject("clue", clue)
