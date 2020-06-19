@@ -67,7 +67,7 @@ public class FilmService {
         ArrayList<Film> films = getPopularFilms();
         films.remove(clue.getFilm());
         Collections.shuffle(films);
-        return films.subList(0, 2);
+        return films.subList(0, 3);
     }
 
     public ArrayList<Film> getPopularFilms() {

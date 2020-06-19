@@ -5,7 +5,6 @@ import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import uk.co.emg.entity.Clue;
 import uk.co.emg.entity.ClueComponent;
-import uk.co.emg.entity.Emoji;
 import uk.co.emg.entity.Film;
 import uk.co.emg.entity.Guess;
 import uk.co.emg.enumeration.MutationType;
@@ -22,29 +21,25 @@ import java.util.stream.Collectors;
 @Service
 public class ClueService {
     private final EmojiService emojiService;
-    private final ClueComponentService clueComponentService;
     private final GuessService guessService;
     private final ClueRepository clueRepository;
     private final MutationService mutationService;
 
-    public ClueService(EmojiService emojiService, ClueComponentService clueComponentService, GuessService guessService, MutationService mutationService, ClueRepository clueRepository) {
+    public ClueService(EmojiService emojiService, GuessService guessService, MutationService mutationService, ClueRepository clueRepository) {
         this.emojiService = emojiService;
         this.mutationService = mutationService;
         this.clueRepository = clueRepository;
-        this.clueComponentService = clueComponentService;
         this.guessService = guessService;
     }
 
     public void createClue(Film film) {
         Clue clue = new Clue(film);
-        List<Emoji> emojis = emojiService.getEmojiBasedOnFilm(film);
-        ArrayList<ClueComponent> clueComponents = new ArrayList<>(emojis.size());
-        for (Emoji emoji : emojis) {
-            clueComponents.add(new ClueComponent(clue, emoji));
+        List<ClueComponent> clueComponents = new ArrayList<>(5);
+        for (int i = 0; i < 5; i++) {
+            clueComponents.add(new ClueComponent(clue, emojiService.getRandomEmoji()));
         }
         clue.setClueComponents(clueComponents);
         clueRepository.save(clue);
-        clueComponentService.saveAll(clueComponents);
     }
 
     public Optional<Clue> getClue(Long clueId) {

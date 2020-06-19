@@ -44,7 +44,7 @@ public class ClueServiceTest {
 
     @Before
     public void before() {
-        clueService = new ClueService(emojiService, clueComponentService, guessService, mutationService, clueRepository);
+        clueService = new ClueService(emojiService, guessService, mutationService, clueRepository);
     }
 
     @Test
