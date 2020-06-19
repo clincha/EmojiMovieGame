@@ -2,6 +2,7 @@ package uk.co.emg.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class Emoji {
@@ -82,5 +83,23 @@ public class Emoji {
 
     public void setSubGroup(String subGroup) {
         this.subGroup = subGroup;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Emoji emoji = (Emoji) o;
+        return slug.equals(emoji.slug) &&
+                character.equals(emoji.character) &&
+                unicodeName.equals(emoji.unicodeName) &&
+                Objects.equals(codePoint, emoji.codePoint) &&
+                emojiGroup.equals(emoji.emojiGroup) &&
+                Objects.equals(subGroup, emoji.subGroup);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(slug, character, unicodeName, codePoint, emojiGroup, subGroup);
     }
 }

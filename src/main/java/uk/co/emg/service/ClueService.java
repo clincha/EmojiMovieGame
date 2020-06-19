@@ -7,9 +7,11 @@ import uk.co.emg.entity.Clue;
 import uk.co.emg.entity.ClueComponent;
 import uk.co.emg.entity.Emoji;
 import uk.co.emg.entity.Film;
+import uk.co.emg.enumeration.MutationType;
 import uk.co.emg.repository.ClueRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -78,12 +80,12 @@ public class ClueService {
             clueComponents.set(i, new ClueComponent(child, clueComponents.get(i).getEmoji()));
         }
         Random random = new Random();
-        if (random.nextInt(100) < 2) {
-            mutationService.mutate(child, clueComponents);
-        }
         child.setClueComponents(clueComponents);
-        child = save(child);
-        return child;
+        if (random.nextInt(100) < 2) {
+            MutationType mutationType = Arrays.asList(MutationType.values()).get(random.nextInt(MutationType.values().length));
+            child = mutationService.mutate(child, mutationType);
+        }
+        return save(child);
     }
 
     public Clue save(Clue clue) {

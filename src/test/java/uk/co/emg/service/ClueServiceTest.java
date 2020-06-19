@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -140,12 +141,16 @@ public class ClueServiceTest {
 
         when(clueRepository.findAllByFitnessIsNull()).thenReturn(allClues);
 
+        Clue returnedClue = clueService.getClue(allClues);
+
+        assertTrue(allClues.contains(returnedClue));
+
         var alreadySeenClues = new ArrayList<Clue>(2);
 
         alreadySeenClues.add(clue0);
         alreadySeenClues.add(clue1);
 
-        Clue returnedClue = clueService.getClue(alreadySeenClues);
+        returnedClue = clueService.getClue(alreadySeenClues);
 
         assertNotNull(returnedClue);
         assertEquals(returnedClue, clue2);
