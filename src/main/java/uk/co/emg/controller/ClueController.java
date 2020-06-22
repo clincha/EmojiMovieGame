@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import uk.co.emg.entity.Clue;
 import uk.co.emg.entity.Film;
-import uk.co.emg.entity.Guess;
 import uk.co.emg.exception.IncorrectClueIdException;
 import uk.co.emg.exception.IncorrectFilmIdException;
 import uk.co.emg.service.ClueService;
@@ -17,7 +16,6 @@ import uk.co.emg.service.GuessService;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class ClueController {

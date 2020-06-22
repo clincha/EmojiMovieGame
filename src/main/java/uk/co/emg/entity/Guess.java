@@ -1,6 +1,10 @@
 package uk.co.emg.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Guess {
@@ -59,7 +63,17 @@ public class Guess {
     }
 
     public boolean isCorrect() {
-        return clue.getFilm()
-                .equals(film);
+        return clue.getFilm().equals(film);
+    }
+
+    @Override
+    public String toString() {
+        return "Guess{" +
+                "id=" + id +
+                ", Correct Answer=" + clue.getFilm().title +
+                ", Guess=" + film.title +
+                ", sessionId='" + sessionId + '\'' +
+                ", isCorrect=" + isCorrect() +
+                '}';
     }
 }

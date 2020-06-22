@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
-    public static final int INITIAL_CLUE_GENERATION_SIZE = 10;
+    public static final int CLUE_GENERATION_SIZE = 10;
     public static final int GENERATION_GUESS_THRESHOLD = 10;
     public static final int FILM_GENERATION_SIZE = 20;
     private final ApiService apiService;
@@ -56,7 +56,7 @@ public class FilmService {
             }
             filmRepository.saveAll(films);
             for (Film film : getPopularFilms()) {
-                for (int i = 0; i < INITIAL_CLUE_GENERATION_SIZE; i++) {
+                for (int i = 0; i < CLUE_GENERATION_SIZE; i++) {
                     clueService.createClue(film);
                 }
             }

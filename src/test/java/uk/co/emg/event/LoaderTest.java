@@ -2,7 +2,6 @@ package uk.co.emg.event;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -34,7 +33,7 @@ public class LoaderTest {
     public void cluesCountCorrectForEachFilmAfterPreload() {
         ArrayList<Film> films = (ArrayList<Film>) filmRepository.findAll();
         for (Film film : films) {
-            assertEquals(film.getClues().size(), FilmService.INITIAL_CLUE_GENERATION_SIZE);
+            assertEquals(film.getClues().size(), FilmService.CLUE_GENERATION_SIZE);
         }
     }
 

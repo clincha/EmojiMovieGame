@@ -83,8 +83,8 @@ public class ClueService {
         for (int i = 0; i < clueComponents.size(); i++) {
             clueComponents.set(i, new ClueComponent(child, clueComponents.get(i).getEmoji()));
         }
-        Random random = new Random();
         child.setClueComponents(clueComponents);
+        Random random = new Random();
         if (random.nextInt(100) < 2) {
             MutationType mutationType = Arrays.asList(MutationType.values()).get(random.nextInt(MutationType.values().length));
             child = mutationService.mutate(child, mutationType);

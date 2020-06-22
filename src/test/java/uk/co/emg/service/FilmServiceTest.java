@@ -71,7 +71,7 @@ public class FilmServiceTest {
 
         List<Clue> newGeneration = filmService.createNewGeneration(film);
 
-        assertEquals(10, newGeneration.size());
+        assertEquals(FilmService.CLUE_GENERATION_SIZE, newGeneration.size());
     }
 
     @Test

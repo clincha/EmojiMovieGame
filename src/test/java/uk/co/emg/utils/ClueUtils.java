@@ -23,8 +23,8 @@ public class ClueUtils {
     }
 
     public static List<Clue> getClues() {
-        List<Clue> clues = new ArrayList<>(FilmService.INITIAL_CLUE_GENERATION_SIZE);
-        for (int i = 0; i < FilmService.INITIAL_CLUE_GENERATION_SIZE; i++) {
+        List<Clue> clues = new ArrayList<>(FilmService.CLUE_GENERATION_SIZE);
+        for (int i = 0; i < FilmService.CLUE_GENERATION_SIZE; i++) {
             clues.add(getClue());
         }
         return clues;

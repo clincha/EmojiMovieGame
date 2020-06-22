@@ -10,8 +10,8 @@ public class FilmUtils {
 
     public static Film getFilm() {
         Film film = new Film(1, "Test Title", "Test Poster Path", "Test Overview");
-        List<Clue> clues = new ArrayList<>(FilmService.INITIAL_CLUE_GENERATION_SIZE);
-        for (int i = 0; i < FilmService.INITIAL_CLUE_GENERATION_SIZE; i++) {
+        List<Clue> clues = new ArrayList<>(FilmService.CLUE_GENERATION_SIZE);
+        for (int i = 0; i < FilmService.CLUE_GENERATION_SIZE; i++) {
             Clue clue = new Clue(film);
             List<ClueComponent> clueComponents = new ArrayList<>();
             clueComponents.add(new ClueComponent(clue, new Emoji("smiling-face", "☺", "263A FE0F", "smileys-emotion", "face-affection", "smiling face")));
